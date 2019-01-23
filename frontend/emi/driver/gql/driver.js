@@ -24,9 +24,13 @@ export const DriverDriver = gql`
   query DriverDriver($id: String!) {
     DriverDriver(id: $id) {
       _id
-      generalInfo {
+      generalInfo {        
+        documentType
+        document
         name
-        description
+        lastname
+        email
+        phone
       }
       state
       creationTimestamp
@@ -42,8 +46,12 @@ export const DriverDrivers = gql`
     DriverDrivers(filterInput: $filterInput, paginationInput: $paginationInput) {
       _id
       generalInfo {
+        documentType
+        document
         name
-        description
+        lastname
+        email
+        phone
       }
       state
       creationTimestamp
@@ -93,8 +101,12 @@ export const DriverDriverUpdatedSubscription = gql`
     DriverDriverUpdatedSubscription{
       _id
       generalInfo {
+        documentType
+        document
         name
-        description
+        lastname
+        email
+        phone
       }
       state
       creationTimestamp

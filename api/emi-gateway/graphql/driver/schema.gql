@@ -25,10 +25,19 @@ type DriverDriver {
 }
 
 type DriverGeneralInfo {
+  "Driver documentType"
+  documentType: String
+  "Driver document"
+  document: String
   "Driver name"
-  name: String!,
-  "Driver description"
-  description: String!
+  name: String
+  "Driver lastname"
+  lastname: String
+  "Driver email"
+  email: String
+  "Driver phone"
+  phone: BigInt
+
 }
 
 input FilterInput {
@@ -65,10 +74,17 @@ input DriverDriverInput {
 }
 
 input DriverDriverGeneralInfoInput {
+  documentType: String
+  "Driver document"
+  document: String
   "Driver name"
-  name: String!,
-  "Driver description"
-  description: String!
+  name: String
+  "Driver lastname"
+  lastname: String
+  "Driver email"
+  email: String
+  "Driver phone"
+  phone: BigInt
 }
 
 type Query {

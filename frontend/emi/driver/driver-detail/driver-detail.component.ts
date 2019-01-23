@@ -89,7 +89,7 @@ export class DriverDetailComponent implements OnInit, OnDestroy {
       this.pageType = (driver && driver._id) ? 'edit' : 'new'
     }, e => console.log(e));
   }
-  
+
   subscribeDriverUpdated(){
     this.DriverDetailservice.subscribeDriverDriverUpdatedSubscription$()
     .pipe(
@@ -105,7 +105,7 @@ export class DriverDetailComponent implements OnInit, OnDestroy {
     if(this.DriverDetailservice.lastOperation == 'CREATE'){
 
       //Fields that will be compared to check if the entity was created
-      if(newdriver.generalInfo.name == this.DriverDetailservice.driver.generalInfo.name 
+      if(newdriver.generalInfo.name == this.DriverDetailservice.driver.generalInfo.name
         && newdriver.generalInfo.description == this.DriverDetailservice.driver.generalInfo.description){
         //Show message entity created and redirect to the main page
         this.showSnackBar('DRIVER.ENTITY_CREATED');

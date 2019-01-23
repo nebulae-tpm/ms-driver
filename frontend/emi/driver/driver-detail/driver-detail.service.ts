@@ -8,7 +8,7 @@ import {
   DriverUpdateDriverState,
   DriverDriver,
   DriverDriverUpdatedSubscription
-} from '../gql/Driver.js';
+} from '../gql/driver.js';
 
 @Injectable()
 export class DriverDetailService {

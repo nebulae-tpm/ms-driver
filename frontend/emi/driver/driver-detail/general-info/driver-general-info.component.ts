@@ -74,6 +74,8 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
   driverGeneralInfoForm: any;
   driverStateForm: any;
 
+  documentTypes= ['CC', 'PASSPORT'];
+
   constructor(
     private translationLoader: FuseTranslationLoaderService,
     private translate: TranslateService,
@@ -91,8 +93,12 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.driverGeneralInfoForm = new FormGroup({
+      documentType: new FormControl(this.driver ? (this.driver.generalInfo || {}).documentType : ''),
+      document: new FormControl(this.driver ? (this.driver.generalInfo || {}).document : ''),
       name: new FormControl(this.driver ? (this.driver.generalInfo || {}).name : ''),
-      description: new FormControl(this.driver ? (this.driver.generalInfo || {}).description : '')
+      lastname: new FormControl(this.driver ? (this.driver.generalInfo || {}).lastname : ''),
+      email: new FormControl(this.driver ? (this.driver.generalInfo || {}).email : ''),
+      phone: new FormControl(this.driver ? (this.driver.generalInfo || {}).phone : ''),
     });
 
     this.driverStateForm = new FormGroup({
@@ -103,6 +109,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
   createDriver() {
     this.toolbarService.onSelectedBusiness$
     .pipe(
+      take(1),
       tap(selectedBusiness => {
         if(!selectedBusiness){
           this.showSnackBar('DRIVER.SELECT_BUSINESS');
@@ -121,7 +128,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
             return this.DriverDetailservice.createDriverDriver$(this.driver);
           }),
           mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
-          filter((resp: any) => !resp.errors || resp.errors.length === 0),          
+          filter((resp: any) => !resp.errors || resp.errors.length === 0),
         )
       }),
       takeUntil(this.ngUnsubscribe)
@@ -140,8 +147,12 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
       .pipe(
         mergeMap(ok => {
           const generalInfoinput = {
+            documentType: this.driverGeneralInfoForm.getRawValue().documentType,
+            document: this.driverGeneralInfoForm.getRawValue().document,
             name: this.driverGeneralInfoForm.getRawValue().name,
-            description: this.driverGeneralInfoForm.getRawValue().description
+            lastname: this.driverGeneralInfoForm.getRawValue().lastname,
+            email: this.driverGeneralInfoForm.getRawValue().email,
+            phone: this.driverGeneralInfoForm.getRawValue().phone
           };
           return this.DriverDetailservice.updateDriverDriverGeneralInfo$(this.driver._id, generalInfoinput);
         }),
@@ -163,7 +174,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
   onDriverStateChange() {
     this.showConfirmationDialog$("DRIVER.UPDATE_MESSAGE", "DRIVER.UPDATE_TITLE")
       .pipe(
-        mergeMap(ok => {        
+        mergeMap(ok => {
           return this.DriverDetailservice.updateDriverDriverState$(this.driver._id, this.driverStateForm.getRawValue().state);
         }),
         mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),

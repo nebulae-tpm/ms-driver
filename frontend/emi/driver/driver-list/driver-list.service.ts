@@ -9,7 +9,7 @@ import {
   DriverDriversSize,
   getHelloWorld,
   DriverHelloWorldSubscription
-} from '../gql/Driver';
+} from '../gql/driver';
 
 @Injectable()
 export class DriverListService {
@@ -57,7 +57,7 @@ export class DriverListService {
   /**
    * Gets the driver list
    * @param filter Data to filter the list
-   * @param paginator Object that contains info about page number and amount of records to recover 
+   * @param paginator Object that contains info about page number and amount of records to recover
    * @returns {Observable} Observable with the driver list
    */
   getdriverList$(filterInput, paginatorInput){

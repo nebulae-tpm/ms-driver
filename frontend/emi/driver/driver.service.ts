@@ -5,7 +5,7 @@ import { GatewayService } from '../../../api/gateway.service';
 import {
   getHelloWorld,
   DriverHelloWorldSubscription
-} from './gql/Driver';
+} from './gql/driver';
 
 @Injectable()
 export class DriverService {
