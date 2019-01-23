@@ -11,6 +11,20 @@ export const getHelloWorld = gql`
   }
 `;
 
+export const DriverDriverBlocks = gql`
+  query DriverDriverBlocks($id: String!) {
+    DriverDriverBlocks(id: $id) {
+      key
+      notes
+      vehicleId
+      startTime
+      endTime
+      user
+    }
+  }
+`;
+
+
 
 //Hello world sample, please remove
 export const DriverHelloWorldSubscription = gql`
@@ -24,7 +38,7 @@ export const DriverDriver = gql`
   query DriverDriver($id: String!) {
     DriverDriver(id: $id) {
       _id
-      generalInfo {        
+      generalInfo {
         documentType
         document
         name
@@ -80,6 +94,15 @@ export const DriverCreateDriver = gql `
 export const DriverUpdateDriverGeneralInfo = gql `
   mutation DriverUpdateDriverGeneralInfo($id: ID!, $input: DriverDriverGeneralInfoInput!){
     DriverUpdateDriverGeneralInfo(id: $id, input: $input){
+      code
+      message
+    }
+  }
+`;
+
+export const RemoveDriverBlocking = gql `
+  mutation DriverRemoveDriverBlocking($id: ID!, $input: DriverDriverGeneralInfoInput!){
+    DriverRemoveDriverBlocking(id: $id, input: $input){
       code
       message
     }

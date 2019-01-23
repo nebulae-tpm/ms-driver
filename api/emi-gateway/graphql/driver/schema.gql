@@ -87,6 +87,15 @@ input DriverDriverGeneralInfoInput {
   phone: BigInt
 }
 
+type DriverDriverBlock {
+  key: String
+  notes: String
+  vehicleId: String
+  startTime: BigInt
+  endTime: BigInt
+  user: String
+}
+
 type Query {
   "Get Drivers filtered "
   DriverDrivers(filterInput: FilterInput!, paginationInput: PaginationInput!): [DriverDriver]
@@ -94,6 +103,8 @@ type Query {
   DriverDriversSize(filterInput: FilterInput!): Int!
   "Get Driver by its id"
   DriverDriver(id: String!): DriverDriver
+  "get the Blocks of the related Driver"
+  DriverDriverBlocks(id: String!): [DriverDriverBlock]
 }
 
 type Mutation {
@@ -103,6 +114,8 @@ type Mutation {
   DriverUpdateDriverGeneralInfo(id:ID!, input: DriverDriverGeneralInfoInput!): CommandResponse
   "Update the Driver state"
   DriverUpdateDriverState(id: ID!, newState: Boolean!): CommandResponse
+  "Remove one driver block"
+  DriverRemoveDriverBlocking(id: ID!, blockKey: String!): CommandResponse
 }
 
 type Subscription {

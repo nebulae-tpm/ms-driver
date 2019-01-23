@@ -7,7 +7,9 @@ import {
   DriverUpdateDriverGeneralInfo,
   DriverUpdateDriverState,
   DriverDriver,
-  DriverDriverUpdatedSubscription
+  DriverDriverUpdatedSubscription,
+  DriverDriverBlocks,
+  RemoveDriverBlocking
 } from '../gql/driver.js';
 
 @Injectable()
@@ -70,7 +72,7 @@ export class DriverDetailService {
           errorPolicy: 'all'
         });
       })
-    )
+    );
   }
 
   updateDriverDriverGeneralInfo$(id: String, driverGeneralInfo: any) {
@@ -87,8 +89,10 @@ export class DriverDetailService {
           errorPolicy: 'all'
         });
       })
-    )
+    );
   }
+
+
 
   updateDriverDriverState$(id: String, newState: boolean) {
     return this.gateway.apollo
@@ -102,15 +106,39 @@ export class DriverDetailService {
       });
   }
 
+  removeVehicleBlock$(id: String, blockKey: string) {
+    return this.gateway.apollo
+      .mutate<any>({
+        mutation: RemoveDriverBlocking,
+        variables: {
+          id: id,
+          blockKey: blockKey
+        },
+        errorPolicy: 'all'
+      });
+  }
+
   getDriverDriver$(entityId: string) {
     return this.gateway.apollo.query<any>({
       query: DriverDriver,
       variables: {
         id: entityId
       },
-      fetchPolicy: "network-only",
-      errorPolicy: "all"
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all'
     });
+  }
+
+  getDriverDriverBlocks$(driverId: string){
+    return this.gateway.apollo.query<any>({
+      query: DriverDriverBlocks,
+      variables: {
+        id: driverId
+      },
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all'
+    });
+
   }
 
 /**

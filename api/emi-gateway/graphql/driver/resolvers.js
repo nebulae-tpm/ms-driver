@@ -80,7 +80,27 @@ module.exports = {
                 catchError(err => handleError$(err, "DriverDriver")),
                 mergeMap(response => getResponseFromBackEnd$(response))
             ).toPromise();
-        }
+        },
+        DriverDriverBlocks(root, args, context) {
+            return RoleValidator.checkPermissions$(
+                context.authToken.realm_access.roles,
+                'ms-'+'Driver',
+                'DriverDriverBlocks',
+                PERMISSION_DENIED_ERROR_CODE,
+                'Permission denied', ["PLATFORM-ADMIN"]
+            )
+            .pipe(
+                mergeMap(() => broker
+                    .forwardAndGetReply$(
+                        "Driver",
+                        "emi-gateway.graphql.query.DriverDriverBlocks",
+                        { root, args, jwt: context.encodedToken },
+                        2000
+                    )),
+                catchError(err => handleError$(err, "DriverDriverBlocks")),
+                mergeMap(response => getResponseFromBackEnd$(response))
+            ).toPromise();
+        },
     },
 
     //// MUTATIONS ///////
@@ -141,6 +161,27 @@ module.exports = {
                   context.broker.forwardAndGetReply$(
                     "Driver",
                     "emi-gateway.graphql.mutation.DriverUpdateDriverState",
+                    { root, args, jwt: context.encodedToken },
+                    2000
+                  )
+                ),
+                catchError(err => handleError$(err, "updateDriverState")),
+                mergeMap(response => getResponseFromBackEnd$(response))
+            ).toPromise();
+        },
+        DriverRemoveDriverBlocking(root, args, context) {
+            return RoleValidator.checkPermissions$(
+              context.authToken.realm_access.roles,
+              "Driver",
+              "DriverRemoveDriverBlocking",
+              PERMISSION_DENIED_ERROR_CODE,
+              "Permission denied",
+              ["PLATFORM-ADMIN"]
+            ).pipe(
+                mergeMap(() =>
+                  context.broker.forwardAndGetReply$(
+                    "Driver",
+                    "emi-gateway.graphql.mutation.driverRemoveDriverBlocking",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
