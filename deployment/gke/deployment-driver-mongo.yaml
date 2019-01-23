@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: driv-mongo
+spec:
+  ports:
+  - port: 27017
+    name: driv-mongo
+  selector:
+    app: driv-mongo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: driv-mongo-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Gi
+---
+apiVersion: apps/v1beta2 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: driv-mongo
+spec:
+  selector:
+    matchLabels:
+      app: driv-mongo
+  strategy:
+    type: Recreate      
+  template:
+    metadata:
+      labels:
+        app: driv-mongo
+    spec:
+      containers:
+      - image: mongo:4
+        name: driv-mongo        
+        ports:
+        - containerPort: 27017
+          name: driv-mongo
+        volumeMounts:
+        - name: driv-mongo-persistent-storage
+          mountPath: /data/db
+        resources:
+          requests:
+            cpu: "50m"
+      volumes:
+      - name: driv-mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName: driv-mongo-pv-claim      

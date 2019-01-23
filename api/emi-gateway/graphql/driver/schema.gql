@@ -1,0 +1,95 @@
+type CommandResponse {
+  "Response code"
+  code: Int
+  "Response message"
+  message: String
+}
+
+type DriverDriver {
+  "Driver ID"
+  _id: ID!
+  "User general info"
+  generalInfo: DriverGeneralInfo
+  "Driver state"
+  state: Boolean!
+  "Creation timestamp"
+  creationTimestamp: BigInt!
+  "Creator user"
+  creatorUser: String!
+  "Modification timestamp"
+  modificationTimestamp: BigInt!
+  "Modifier user"
+  modifierUser: String!
+  "Business ID"
+  businessId: String!
+}
+
+type DriverGeneralInfo {
+  "Driver name"
+  name: String!,
+  "Driver description"
+  description: String!
+}
+
+input FilterInput {
+  "ID of the business"
+  businessId: String
+  "Name"
+  name: String
+  "State"
+  state: Boolean
+  "Creator user"
+  creatorUser: String
+  "modifier user"
+  modifierUser: String
+  "get data created after indicated timestamp"
+  creationTimestamp: BigInt
+}
+
+input PaginationInput {
+  "Page"
+  page: Int!
+  "Count"
+  count: Int!
+  "Sort, default: ASC"
+  sort: Int
+}
+
+input DriverDriverInput {
+  "Driver general info"
+  generalInfo: DriverDriverGeneralInfoInput!
+  "Driver status"
+  state: Boolean!
+  "Business ID"
+  businessId: String!
+}
+
+input DriverDriverGeneralInfoInput {
+  "Driver name"
+  name: String!,
+  "Driver description"
+  description: String!
+}
+
+type Query {
+  "Get Drivers filtered "
+  DriverDrivers(filterInput: FilterInput!, paginationInput: PaginationInput!): [DriverDriver]
+  "Get the amount of Drivers filtered "
+  DriverDriversSize(filterInput: FilterInput!): Int!
+  "Get Driver by its id"
+  DriverDriver(id: String!): DriverDriver
+}
+
+type Mutation {
+  "Create a new Driver"
+  DriverCreateDriver(input: DriverDriverInput!): CommandResponse
+  "Update the Driver generalInfo"
+  DriverUpdateDriverGeneralInfo(id:ID!, input: DriverDriverGeneralInfoInput!): CommandResponse
+  "Update the Driver state"
+  DriverUpdateDriverState(id: ID!, newState: Boolean!): CommandResponse
+}
+
+type Subscription {
+  "This events is triggered when a Driver is created or updated"
+  DriverDriverUpdatedSubscription: DriverDriver  
+}
