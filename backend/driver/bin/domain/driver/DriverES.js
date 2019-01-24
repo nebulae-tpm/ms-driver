@@ -64,7 +64,7 @@ class DriverES {
 
     }
 
-    handleCleanExpiredDriverBlocks(DriverBlockRemovedEvt){
+    handleCleanExpiredDriverBlocks$(DriverBlockRemovedEvt){
         console.log('############### handleCleanExpiredBlocks$', DriverBlockRemovedEvt);
         return DriverBlocksDA.removeExpiredBlocks$(DriverBlockRemovedEvt.timestamp);
 

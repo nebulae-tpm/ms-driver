@@ -17,14 +17,33 @@ export const locale = {
       ADD_NEW: 'Agregar nuevo',
       DETAILS: {
         TABS: {
-          GENERAL_INFO: 'Información general'
+          GENERAL_INFO: 'Información general',
+          BLOCKS: 'Bloqueos',
+          MEMBERSHIP: 'Membresía',
+          CREDENTIALS: 'Credenciales'
         },
         GENERAL_INFO: 'Información general',
         ENABLED: 'Activo',
         DISABLED: 'Desactivado',
         NAME: 'Nombre',
-        DESCRIPTION: 'Descripción'
-      },
+        LASTNAME: 'Apellido',
+        DESCRIPTION: 'Descripción',
+        DOCUMENT_TYPE: 'Tipo documento',
+        DOCUMENT_TYPES: {
+          CC: 'Cédula de ciudadania',
+          PASSPORT: 'Pasaporte'
+        },
+        DOCUMENT: 'Documento',
+        EMAIL: 'Email',
+        PHONE: 'Teléfono',
+        DOCUMENT_TYPE_REQUIRED: 'Tipo documento requerido',
+        DOCUMENT_REQUIRED: 'Documento requerido',
+        NAME_REQUIRED: 'Nombre requerido',
+        LASTNAME_REQUIRED: 'Apellido requerido',
+        EMAIL_REQUIRED: 'Email requerido',
+        PHONE_REQUIRED: 'Teléfono requerido',
+        EMAIL_FORMAT: 'Formato de email inválido'
+      },      
       BLOCKS: {
         KEY: 'Bloqueo',
         NOTES: 'Notas',

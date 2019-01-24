@@ -93,12 +93,12 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.driverGeneralInfoForm = new FormGroup({
-      documentType: new FormControl(this.driver ? (this.driver.generalInfo || {}).documentType : ''),
-      document: new FormControl(this.driver ? (this.driver.generalInfo || {}).document : ''),
-      name: new FormControl(this.driver ? (this.driver.generalInfo || {}).name : ''),
-      lastname: new FormControl(this.driver ? (this.driver.generalInfo || {}).lastname : ''),
-      email: new FormControl(this.driver ? (this.driver.generalInfo || {}).email : ''),
-      phone: new FormControl(this.driver ? (this.driver.generalInfo || {}).phone : ''),
+      documentType: new FormControl(this.driver ? (this.driver.generalInfo || {}).documentType : '', [Validators.required]),
+      document: new FormControl(this.driver ? (this.driver.generalInfo || {}).document : '', [Validators.required]),
+      name: new FormControl(this.driver ? (this.driver.generalInfo || {}).name : '', [Validators.required]),
+      lastname: new FormControl(this.driver ? (this.driver.generalInfo || {}).lastname : '', [Validators.required]),
+      email: new FormControl(this.driver ? (this.driver.generalInfo || {}).email : '', [Validators.required, Validators.email]),
+      phone: new FormControl(this.driver ? (this.driver.generalInfo || {}).phone : '', [Validators.required]),
     });
 
     this.driverStateForm = new FormGroup({

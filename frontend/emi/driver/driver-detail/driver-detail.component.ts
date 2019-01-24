@@ -86,7 +86,8 @@ export class DriverDetailComponent implements OnInit, OnDestroy {
     )
     .subscribe((driver: any) => {
       this.driver = driver;
-      this.pageType = (driver && driver._id) ? 'edit' : 'new'
+      this.pageType = (driver && driver._id) ? 'edit' : 'new';
+      console.log('this.pageType => ', this.pageType);
     }, e => console.log(e));
   }
 

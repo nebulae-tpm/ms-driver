@@ -7,6 +7,7 @@ if (process.env.NODE_ENV !== 'production') {
 const eventSourcing = require('./tools/EventSourcing')();
 const eventStoreService = require('./services/event-store/EventStoreService')();
 const mongoDB = require('./data/MongoDB').singleton();
+const KeycloakDA = require('./data/KeycloakDA').singleton();
 const DriverDA = require('./data/DriverDA');
 const DriverBlocksDA = require('./data/DriverBlocksDA');
 const graphQlService = require('./services/emi-gateway/GraphQlService')();
@@ -19,7 +20,8 @@ const start = () => {
         mongoDB.start$(),
         DriverDA.start$(),
         DriverBlocksDA.start$(),
-        graphQlService.start$()
+        graphQlService.start$(),
+        KeycloakDA.checkKeycloakToken$(), 
     ).subscribe(
         (evt) => {
             // console.log(evt)

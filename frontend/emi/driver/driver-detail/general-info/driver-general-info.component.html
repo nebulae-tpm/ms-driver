@@ -14,13 +14,13 @@
 
        <!-- DOCUMENT TYPE -->
        <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
-        <mat-select name="documentType" formControlName="documentType" placeholder="{{'VEHICLE.FEATURES.DOCUMENT_TYPE' | translate}}">
+        <mat-select name="documentType" formControlName="documentType" placeholder="{{'DRIVER.DETAILS.DOCUMENT_TYPE' | translate}}">
           <mat-option *ngFor="let docType of documentTypes" [value]="docType">
-            {{ 'VEHICLE.FEATURES.DOCUMENT_TYPES.'+ docType | translate }}
+            {{ 'DRIVER.DETAILS.DOCUMENT_TYPES.'+ docType | translate }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['documentType'])">
-          {{'VEHICLE.DOCUMENT_TYPE_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.DOCUMENT_TYPE_REQUIRED' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DOCUMENT TYPE -->
@@ -29,7 +29,7 @@
       <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
         <input matInput name="document" formControlName="document" maxlength="15" placeholder="{{'DRIVER.DETAILS.DOCUMENT' | translate}}">
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['document'])">
-          {{'DRIVER.DOCUMENT_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.DOCUMENT_REQUIRED' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DRIVER DOCUMENT -->
@@ -38,7 +38,7 @@
       <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
         <input matInput name="name" formControlName="name" maxlength="15" placeholder="{{'DRIVER.DETAILS.NAME' | translate}}">
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['name'])">
-          {{'DRIVER.NAME_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.NAME_REQUIRED' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DRIVER NAME -->
@@ -47,7 +47,7 @@
       <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
         <input matInput name="lastname" formControlName="lastname" maxlength="15" placeholder="{{'DRIVER.DETAILS.LASTNAME' | translate}}">
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['lastname'])">
-          {{'DRIVER.LASTNAME_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.LASTNAME_REQUIRED' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DRIVER LASTNAME -->
@@ -55,9 +55,12 @@
 
       <!-- DRIVER EMAIL -->
       <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
-        <input matInput name="email" formControlName="email" maxlength="15" placeholder="{{'DRIVER.DETAILS.EMAIL' | translate}}">
+        <input matInput name="email" formControlName="email" maxlength="50" placeholder="{{'DRIVER.DETAILS.EMAIL' | translate}}">
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['email'])">
-          {{'DRIVER.EMAIL_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.EMAIL_REQUIRED' | translate}}
+        </mat-error>
+        <mat-error *ngIf="driverGeneralInfoForm.hasError('pattern', ['email'])">
+          {{'DRIVER.DETAILS.EMAIL_FORMAT' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DRIVER EMAIL -->
@@ -66,7 +69,7 @@
       <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
         <input matInput name="phone" formControlName="phone" maxlength="15" placeholder="{{'DRIVER.DETAILS.PHONE' | translate}}">
         <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['phone'])">
-          {{'DRIVER.PHONE_REQUIRED' | translate}}
+          {{'DRIVER.DETAILS.PHONE_REQUIRED' | translate}}
         </mat-error>
       </mat-form-field>
       <!-- DRIVER CONTACT PHONE -->

@@ -17,14 +17,32 @@ export const locale = {
       ADD_NEW: 'Add new',
       DETAILS: {
         TABS: {
-          GENERAL_INFO: 'General Info'
+          GENERAL_INFO: 'General Info',
+          BLOCKS: 'Blocks',
+          MEMBERSHIP: 'Membership',
+          CREDENTIALS: 'Credentials'
         },
         GENERAL_INFO: 'General Info',
         ENABLED: 'Enabled',
         DISABLED: 'Disabled',
         NAME: 'Name',
-        DESCRIPTION: 'Description'
-
+        LASTNAME: 'Lastname',
+        DESCRIPTION: 'Description',
+        DOCUMENT_TYPE: 'Document type',
+        DOCUMENT_TYPES: {
+          CC: 'Citizenship card',
+          PASSPORT: 'Passport'
+        },
+        DOCUMENT: 'Document',
+        EMAIL: 'Email',
+        PHONE: 'Phone',
+        DOCUMENT_TYPE_REQUIRED: 'Document type required',
+        DOCUMENT_REQUIRED: 'Document required',
+        NAME_REQUIRED: 'Name required',
+        LASTNAME_REQUIRED: 'Lastname required',
+        EMAIL_REQUIRED: 'Email required',
+        PHONE_REQUIRED: 'Phone required',
+        EMAIL_FORMAT: 'Invalid email format'
       },
       BLOCKS: {
         KEY: 'Block',
