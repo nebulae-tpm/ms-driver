@@ -106,7 +106,8 @@ export class DriverDetailService {
       });
   }
 
-  removeVehicleBlock$(id: String, blockKey: string) {
+  removeDriverBlock$(id: String, blockKey: string) {
+    console.log('removeDriverBlock$', id, blockKey);
     return this.gateway.apollo
       .mutate<any>({
         mutation: RemoveDriverBlocking,

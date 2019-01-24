@@ -16,6 +16,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
   PERMISSION_DENIED
 } = require("../../tools/customError");
+const DriverBlocksDA =  require('../../data/DriverBlocksDA');
 
 
 
@@ -210,6 +211,55 @@ class DriverCQRS {
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
       catchError(err => GraphqlResponseTools.handleError$(err))
     );
+  }
+
+  getDriverBlocks$({ root, args, jwt }, authToken) { 
+    console.log(args);
+
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "driverBlocks",
+      "getDriverBlocks$",
+      PERMISSION_DENIED,
+      ["PLATFORM-ADMIN"]
+    ).pipe(
+      map(() => [{
+        key: 'PICO_Y_PLACA',
+        notes: 'PYP Ambiental',
+        startTime: 0,
+        endTime: 123456789,
+        user: 'juan.ospina'
+      }]),
+      // mergeMap(() => DriverBlocksDA.findBlocksByDriver$(args.id)),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+
+  }
+
+  removeDriverBlock$({ root, args, jwt }, authToken) { 
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "driverBlock",
+      "removeDriverBlock$",
+      PERMISSION_DENIED,
+      ["PLATFORM-ADMIN"]
+    ).pipe(
+      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+        new Event({
+          eventType: "DriverBlockRemoved",
+          eventTypeVersion: 1,
+          aggregateType: "Driver",
+          aggregateId: args.id,
+          data: { blockKey: args.blockKey},
+          user: authToken.preferred_username
+        })
+      )),
+      map(() => ({ code: 200, message: `Driver with id: ${args.id} has been updated` })),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+
   }
 
 

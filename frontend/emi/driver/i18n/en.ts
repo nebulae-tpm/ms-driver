@@ -1,10 +1,10 @@
 export const locale = {
   lang: 'en',
   data: {
-    'DRIVER': {
-      DETAIL_HEADER_NAME: 'ENTYTY',
-      DETAIL_HEADER_NEW: 'New entity',
-      TITLE: 'Entity name',
+    DRIVER: {
+      DETAIL_HEADER_NAME: 'Driver',
+      DETAIL_HEADER_NEW: 'New Driver',
+      TITLE: 'Driver',
       FILTER: 'Filter',
       NAME: 'Name',
       CREATION_DATE: 'Creation date',
@@ -25,6 +25,14 @@ export const locale = {
         NAME: 'Name',
         DESCRIPTION: 'Description'
 
+      },
+      BLOCKS: {
+        KEY: 'Block',
+        NOTES: 'Notes',
+        START_TIME: 'Start date',
+        END_TIME: 'Expiration date',
+        ACTIONS: 'Actions',
+        USER: 'User'
       },
       ACTIVE: 'Active',
       CREATE: 'Create',

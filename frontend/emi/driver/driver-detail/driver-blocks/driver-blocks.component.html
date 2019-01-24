@@ -25,9 +25,9 @@
 
       <!-- BLOCK NOTES COLUMN -->
       <ng-container cdkColumnDef="notes">
-          <mat-header-cell *cdkHeaderCellDef fxLayoutAlign="center center" >{{ "DRIVER.BLOCKS.NOTES" | translate }}
+          <mat-header-cell *cdkHeaderCellDef fxHide fxShow.gt-xs fxLayoutAlign="center center" >{{ "DRIVER.BLOCKS.NOTES" | translate }}
           </mat-header-cell>
-          <mat-cell *cdkCellDef="let block" fxLayoutAlign="center center" >
+          <mat-cell *cdkCellDef="let block" fxHide fxShow.gt-xs fxLayoutAlign="center center" >
               <p class="text-truncate">
                   {{ block.notes }}
               </p>
@@ -47,18 +47,18 @@
 
       <!-- END_TIME BLOCK COLUMN -->
       <ng-container cdkColumnDef="endTime">
-          <mat-header-cell *cdkHeaderCellDef fxHide fxShow.gt-xs fxLayoutAlign="center center">{{ "DRIVER.BLOCKS.END_TIME" | translate }}
+          <mat-header-cell *cdkHeaderCellDef fxLayoutAlign="center center">{{ "DRIVER.BLOCKS.END_TIME" | translate }}
           </mat-header-cell>
-          <mat-cell *cdkCellDef="let block" fxHide fxShow.gt-xs fxLayoutAlign="center center">
+          <mat-cell *cdkCellDef="let block" fxLayoutAlign="center center">
               <p class="text-truncate"> {{ block.endTime | date }} </p>
           </mat-cell>
       </ng-container>
 
       <!-- REMOVE BLOCK COLUMN -->
       <ng-container cdkColumnDef="actions">
-          <mat-header-cell *cdkHeaderCellDef fxHide fxShow.gt-xs fxLayoutAlign="center center">{{ "DRIVER.BLOCKS.ACTIONS" | translate }}
+          <mat-header-cell *cdkHeaderCellDef fxLayoutAlign="center center">{{ "DRIVER.BLOCKS.ACTIONS" | translate }}
           </mat-header-cell>
-          <mat-cell *cdkCellDef="let block" fxHide fxShow.gt-xs fxLayoutAlign="center center">
+          <mat-cell *cdkCellDef="let block" fxLayoutAlign="center center">
             <button mat-icon-button (click)="removeBlock(block)">
               <mat-icon>delete</mat-icon>
             </button>

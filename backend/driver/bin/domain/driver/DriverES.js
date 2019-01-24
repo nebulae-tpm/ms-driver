@@ -1,10 +1,11 @@
 'use strict'
 
-const {} = require("rxjs");
+const {of} = require("rxjs");
 const { tap, mergeMap, catchError, map, mapTo } = require('rxjs/operators');
 const broker = require("../../tools/broker/BrokerFactory")();
 const DriverDA = require('../../data/DriverDA');
 const MATERIALIZED_VIEW_TOPIC = "emi-gateway-materialized-view-updates";
+const DriverBlocksDA = require('../../data/DriverBlocksDA');
 
 /**
  * Singleton instance
@@ -50,6 +51,23 @@ class DriverES {
         .pipe(
             mergeMap(result => broker.send$(MATERIALIZED_VIEW_TOPIC, `DriverDriverUpdatedSubscription`, result))
         );
+    }
+
+    handleDriverBlockRemoved$(driverBlockRemovedEvt){
+        console.log('############### handleDriverBlockRemoved', driverBlockRemovedEvt);
+        return of(driverBlockRemovedEvt)
+        .pipe(
+            map(() => ({driverId: driverBlockRemovedEvt.aid, blockKey: driverBlockRemovedEvt.data.blockKey }) ),
+            mergeMap(args => DriverBlocksDA.removeBlockFromDevice$(args) ),
+            tap(r => console.log(r.result))
+        )
+
+    }
+
+    handleCleanExpiredDriverBlocks(DriverBlockRemovedEvt){
+        console.log('############### handleCleanExpiredBlocks$', DriverBlockRemovedEvt);
+        return DriverBlocksDA.removeExpiredBlocks$(DriverBlockRemovedEvt.timestamp);
+
     }
 
 }

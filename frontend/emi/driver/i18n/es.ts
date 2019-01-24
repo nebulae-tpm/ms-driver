@@ -2,9 +2,9 @@ export const locale = {
   lang: 'es',
   data: {
     'DRIVER': {
-      DETAIL_HEADER_NAME: 'ENTIDAD',
-      DETAIL_HEADER_NEW: 'Nueva entidad',
-      TITLE: 'Nombre entidad',
+      DETAIL_HEADER_NAME: 'CONDUCTOR',
+      DETAIL_HEADER_NEW: 'Nuevo Conductor',
+      TITLE: 'Conductor',
       FILTER: 'Filtros',
       NAME: 'Nombre',
       CREATION_DATE: 'Fecha creación',
@@ -24,6 +24,14 @@ export const locale = {
         DISABLED: 'Desactivado',
         NAME: 'Nombre',
         DESCRIPTION: 'Descripción'
+      },
+      BLOCKS: {
+        KEY: 'Bloqueo',
+        NOTES: 'Notas',
+        START_TIME: 'Fecha de inicio',
+        END_TIME: 'FEcha de expiración',
+        ACTIONS: 'Acciones',
+        USER: 'Usuario'
       },
       ACTIVE: 'Activo',
       CREATE: 'Crear',

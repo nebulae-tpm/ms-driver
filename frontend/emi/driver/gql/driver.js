@@ -101,8 +101,8 @@ export const DriverUpdateDriverGeneralInfo = gql `
 `;
 
 export const RemoveDriverBlocking = gql `
-  mutation DriverRemoveDriverBlocking($id: ID!, $input: DriverDriverGeneralInfoInput!){
-    DriverRemoveDriverBlocking(id: $id, input: $input){
+  mutation DriverRemoveDriverBlocking($id: ID!, $blockKey: String!){
+    DriverRemoveDriverBlocking(id: $id, blockKey: $blockKey){
       code
       message
     }

@@ -133,6 +133,14 @@ class EventStoreService {
         fn: DriverES.handleDriverStateUpdated$,
         obj: DriverES
       },
+      DriverBlockRemoved: {
+        fn: DriverES.handleDriverBlockRemoved$,
+        obj: DriverES
+      },
+      DriverCleanExpiredBlocks: {
+        fn: DriverES.handleCleanExpiredDriverBlocks$,
+        obj: DriverES
+      }
 
     };
   }
@@ -154,6 +162,14 @@ class EventStoreService {
         aggregateType: "Driver",
         eventType: "DriverStateUpdated"
       },
+      {
+        aggregateType: "Driver",
+        eventType: "DriverBlockRemoved"
+      },
+      {
+        aggregateType: "Driver",
+        eventType: "DriverCleanExpiredBlocks"
+      }
     ]
   }
 }
