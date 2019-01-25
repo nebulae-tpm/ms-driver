@@ -134,6 +134,33 @@ export const DriverUpdateDriverMembershipState = gql `
   }
 `;
 
+export const DriverCreateDriverAuth = gql`
+  mutation DriverCreateDriverAuth($id: ID!, $username: String!, $input: AuthInput) {
+    DriverCreateDriverAuth(id: $id, username: $username, input: $input) {
+      code
+      message
+    }
+  }
+`;
+
+export const DriverRemoveDriverAuth = gql`
+  mutation DriverRemoveDriverAuth($id: ID!) {
+    DriverRemoveDriverAuth(id: $id) {
+      code
+      message
+    }
+  }
+`;
+
+export const DriverResetDriverPassword = gql`
+  mutation DriverResetDriverPassword($id: ID!, $input: UserPasswordInput) {
+    DriverResetDriverPassword(id: $id, input: $input) {
+      code
+      message
+    }
+  }
+`;
+
 // SUBSCRIPTION
 export const DriverDriverUpdatedSubscription = gql`
   subscription{

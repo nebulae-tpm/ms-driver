@@ -172,6 +172,14 @@ class EventStoreService {
       },
       {
         aggregateType: "Driver",
+        eventType: "DriverAuthCreated"
+      },
+      {
+        aggregateType: "Driver",
+        eventType: "DriverAuthDeleted"
+      },
+      {
+        aggregateType: "Driver",
         eventType: "DriverBlockRemoved"
       },
       {

@@ -10,6 +10,9 @@ import {
   DriverDriver,
   DriverDriverUpdatedSubscription,
   DriverDriverBlocks,
+  DriverCreateDriverAuth,
+  DriverRemoveDriverAuth,
+  DriverResetDriverPassword,
   RemoveDriverBlocking
 } from '../gql/driver.js';
 
@@ -117,6 +120,68 @@ export class DriverDetailService {
         },
         errorPolicy: 'all'
       });
+  }
+
+    /**
+   * Create auth for the driver.
+   * @param driverId driverId
+   * @param userPassword Password object
+   * @param userPassword.username username
+   * @param userPassword.password new password
+   * @param userPassword.temporary Booleand that indicates if the password is temporal
+   */
+  createDriverAuth$(driverId, userPassword): Observable<any> {
+    const authInput = {
+      username: userPassword.username,
+      password: userPassword.password,
+      temporary: userPassword.temporary || false
+    };
+
+    return this.gateway.apollo.mutate<any>({
+      mutation: DriverCreateDriverAuth,
+      variables: {
+        id: driverId,
+        username: userPassword.username,
+        input: authInput
+      },
+      errorPolicy: 'all'
+    });
+  }
+
+  /**
+   * Removes auth credentials from user
+   * @param userId Id of the user
+   */
+  removeDriverAuth$(userId): Observable<any> {
+    return this.gateway.apollo.mutate<any>({
+      mutation: DriverRemoveDriverAuth,
+      variables: {
+        userId: userId
+      },
+      errorPolicy: 'all'
+    });
+  }
+
+    /**
+   * Resets the user password.
+   * @param userId id of the user
+   * @param userPassword new password
+   * @param businessId Id of the business to which the user belongs
+   */
+  resetDriverPassword$(userId, userPassword): Observable<any> {
+    const userPasswordInput = {
+      password: userPassword.password,
+      temporary: userPassword.temporary || false
+    };
+
+    return this.gateway.apollo.mutate<any>({
+      mutation: DriverResetDriverPassword,
+      variables: {
+        userId: userId,
+        input: userPasswordInput
+      },
+      errorPolicy: "all"
+    });
   }
 
   removeDriverBlock$(id: String, blockKey: string) {

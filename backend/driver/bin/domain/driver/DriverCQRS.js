@@ -1,20 +1,21 @@
 "use strict";
 
 const uuidv4 = require("uuid/v4");
-const { of, interval } = require("rxjs");
 const Event = require("@nebulae/event-store").Event;
 const eventSourcing = require("../../tools/EventSourcing")();
 const DriverDA = require("../../data/DriverDA");
+const DriverValidatorHelper = require('./DriverValidatorHelper');
 const broker = require("../../tools/broker/BrokerFactory")();
 const MATERIALIZED_VIEW_TOPIC = "materialized-view-updates";
 const GraphqlResponseTools = require('../../tools/GraphqlResponseTools');
 const RoleValidator = require("../../tools/RoleValidator");
-const { take, mergeMap, catchError, map, toArray } = require('rxjs/operators');
+const { of, interval } = require("rxjs");
+const { take, mergeMap, catchError, map, toArray, mapTo } = require('rxjs/operators');
 const {
   CustomError,
   DefaultError,
   INTERNAL_SERVER_ERROR_CODE,
-  PERMISSION_DENIED
+  PERMISSION_DENIED_ERROR_CODE
 } = require("../../tools/customError");
 const DriverBlocksDA =  require('../../data/DriverBlocksDA');
 
@@ -39,8 +40,8 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "getDriver",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
       mergeMap(roles => {
         const isPlatformAdmin = roles["PLATFORM-ADMIN"];
@@ -63,8 +64,8 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "getDriverList",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
       mergeMap(roles => {
         const isPlatformAdmin = roles["PLATFORM-ADMIN"];
@@ -91,8 +92,8 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "getDriverListSize",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
       mergeMap(roles => {
         const isPlatformAdmin = roles["PLATFORM-ADMIN"];
@@ -113,30 +114,33 @@ class DriverCQRS {
   */
  createDriver$({ root, args, jwt }, authToken) {
     const driver = args ? args.input: undefined;
-    driver._id = uuidv4();
-    driver.creatorUser = authToken.preferred_username;
-    driver.creationTimestamp = new Date().getTime();
-    driver.modifierUser = authToken.preferred_username;
-    driver.modificationTimestamp = new Date().getTime();
+    if(driver){
+      driver._id = uuidv4();
+      driver.creatorUser = authToken.preferred_username;
+      driver.creationTimestamp = new Date().getTime();
+      driver.modifierUser = authToken.preferred_username;
+      driver.modificationTimestamp = new Date().getTime();
+    }
 
     return RoleValidator.checkPermissions$(
       authToken.realm_access.roles,
       "Driver",
       "createDriver$",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
-      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+      mergeMap(roles => DriverValidatorHelper.checkDriverCreationDriverValidator$(driver, authToken, roles)),
+      mergeMap(data => eventSourcing.eventStore.emitEvent$(
         new Event({
           eventType: "DriverCreated",
           eventTypeVersion: 1,
           aggregateType: "Driver",
-          aggregateId: driver._id,
-          data: driver,
+          aggregateId: data.driver._id,
+          data: data.driver,
           user: authToken.preferred_username
-        }))
+        })).mapTo(data)
       ),
-      map(() => ({ code: 200, message: `Driver with id: ${driver._id} has been created` })),
+      map(data => ({ code: 200, message: `Driver with id: ${data.driver._id} has been created` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
       catchError(err => GraphqlResponseTools.handleError$(err))
     );
@@ -157,10 +161,16 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "updateDriverGeneralInfo$",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
-      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+      mergeMap(roles => 
+        DriverDA.getDriver$(driver._id)
+        .pipe(
+          mergeMap(userMongo => DriverValidatorHelper.checkDriverUpdateDriverValidator$(driver, authToken, roles, userMongo))
+        )              
+      ),
+      mergeMap(data => eventSourcing.eventStore.emitEvent$(
         new Event({
           eventType: "DriverGeneralInfoUpdated",
           eventTypeVersion: 1,
@@ -168,10 +178,9 @@ class DriverCQRS {
           aggregateId: driver._id,
           data: driver,
           user: authToken.preferred_username
-        })
-      )
+        })).mapTo(data)
       ),
-      map(() => ({ code: 200, message: `Driver with id: ${driver._id} has been updated` })),
+      map(data => ({ code: 200, message: `General info of the driver with id: ${data.driver._id} has been updated` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
       catchError(err => GraphqlResponseTools.handleError$(err))
     );
@@ -193,12 +202,54 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "updateDriverState$",
-      PERMISSION_DENIED,
-      ["PLATFORM-ADMIN"]
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
     ).pipe(
-      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+      mergeMap(roles => 
+        DriverDA.getDriver$(driver._id)
+        .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverUpdateDriverStateValidator$(driver, authToken, roles, userMongo)))
+      ),
+      mergeMap(data => eventSourcing.eventStore.emitEvent$(
         new Event({
           eventType: "DriverStateUpdated",
+          eventTypeVersion: 1,
+          aggregateType: "Driver",
+          aggregateId: driver._id,
+          data: driver,
+          user: authToken.preferred_username
+        })).mapTo(data)
+      ),
+      map(() => ({ code: 200, message: `State of the driver with id: ${driver._id} has been updated` })),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+  }
+
+  /**
+   * Create the driver auth
+   */
+  createDriverAuth$({ root, args, jwt }, authToken) {
+    const driver = {
+      _id: args.id,
+      authInput: args.input,
+      modifierUser: authToken.preferred_username,
+      modificationTimestamp: new Date().getTime()
+    };
+
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "Driver",
+      "createDriverAuth$",
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
+    ).pipe(
+      mergeMap(roles => 
+        DriverDA.getDriver$(driver._id)
+        .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverCreateDriverAuthValidator$(driver, authToken, roles, userMongo)))
+      ),
+      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+        new Event({
+          eventType: "DriverAuthCreated",
           eventTypeVersion: 1,
           aggregateType: "Driver",
           aggregateId: driver._id,
@@ -207,11 +258,52 @@ class DriverCQRS {
         })
       )
       ),
-      map(() => ({ code: 200, message: `Driver with id: ${driver._id} has been updated` })),
+      map(() => ({ code: 200, message: `Auth credential of the driver with id: ${driver._id} has been updated` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
       catchError(err => GraphqlResponseTools.handleError$(err))
     );
   }
+
+  // /**
+  //  * Removes the driver auth
+  //  */
+  // removeUserAuth$({ root, args, jwt }, authToken) {
+  //   const driver = {
+  //     _id: args.id,
+  //     authInput: args.input,
+  //     modifierUser: authToken.preferred_username,
+  //     modificationTimestamp: new Date().getTime()
+  //   };
+
+  //   return RoleValidator.checkPermissions$(
+  //     authToken.realm_access.roles,
+  //     "Driver",
+  //     "createDriverAuth$",
+  //     PERMISSION_DENIED_ERROR_CODE,
+  //     ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
+  //   ).pipe(
+  //     mergeMap(roles => 
+  //       DriverDA.getDriver$(driver._id)
+  //       .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverCreateDriverAuthValidator$(driver, authToken, roles, userMongo)))
+  //     ),
+  //     mergeMap(() => eventSourcing.eventStore.emitEvent$(
+  //       new Event({
+  //         eventType: "DriverAuthCreated",
+  //         eventTypeVersion: 1,
+  //         aggregateType: "Driver",
+  //         aggregateId: driver._id,
+  //         data: driver,
+  //         user: authToken.preferred_username
+  //       })
+  //     )
+  //     ),
+  //     map(() => ({ code: 200, message: `Auth credential of the driver with id: ${driver._id} has been updated` })),
+  //     mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+  //     catchError(err => GraphqlResponseTools.handleError$(err))
+  //   );
+  // }
+
+
 
     /**
    * Edit the driver membership state
@@ -228,7 +320,7 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "Driver",
       "updateDriverMembershipState$",
-      PERMISSION_DENIED,
+      PERMISSION_DENIED_ERROR_CODE,
       ["PLATFORM-ADMIN"]
     ).pipe(
       mergeMap(() => eventSourcing.eventStore.emitEvent$(
@@ -255,7 +347,7 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "driverBlocks",
       "getDriverBlocks$",
-      PERMISSION_DENIED,
+      PERMISSION_DENIED_ERROR_CODE,
       ["PLATFORM-ADMIN"]
     ).pipe(
       map(() => [{
@@ -277,7 +369,7 @@ class DriverCQRS {
       authToken.realm_access.roles,
       "driverBlock",
       "removeDriverBlock$",
-      PERMISSION_DENIED,
+      PERMISSION_DENIED_ERROR_CODE,
       ["PLATFORM-ADMIN"]
     ).pipe(
       mergeMap(() => eventSourcing.eventStore.emitEvent$(

@@ -22,7 +22,16 @@ class DriverDA {
   }
 
   /**
-   * Gets an user by its username
+   * Gets a driver according to the query
+   * @param {Object} filterQuery Query to filter
+   */
+  static getDriverByFilter$(filterQuery) {
+    const collection = mongoDB.db.collection(CollectionName);
+    return Rx.Observable.defer(() => collection.findOne(filterQuery));
+  }
+
+  /**
+   * Gets a driver by its id and business(Optional)
    */
   static getDriver$(id, businessId) {
     const collection = mongoDB.db.collection(CollectionName);

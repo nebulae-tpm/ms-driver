@@ -14,6 +14,8 @@ type DriverDriver {
   state: Boolean!
   "Driver membership"
   membership: Membership
+  "auth credential"
+  auth: DriverAuth
   "Creation timestamp"
   creationTimestamp: BigInt!
   "Creator user"
@@ -24,6 +26,13 @@ type DriverDriver {
   modifierUser: String!
   "Business ID"
   businessId: String!
+}
+
+type DriverAuth {
+  "username"
+  username: String!
+  "User keycloak ID"
+  userKeycloakId: String!
 }
 
 type Membership {
@@ -81,17 +90,33 @@ input DriverDriverInput {
 }
 
 input DriverDriverGeneralInfoInput {
-  documentType: String
+  documentType: String!
   "Driver document"
-  document: String
+  document: String!
   "Driver name"
-  name: String
+  name: String!
   "Driver lastname"
-  lastname: String
+  lastname: String!
   "Driver email"
-  email: String
+  email: String!
   "Driver phone"
-  phone: BigInt
+  phone: BigInt!
+}
+
+input DriverPasswordInput {
+  "User password"
+  password: String!
+  "User temporary"
+  temporary: Boolean!
+}
+
+input DriverAuthInput {
+  "username"
+  username: String!
+  "User password"
+  password: String!
+  "User temporary"
+  temporary: Boolean!
 }
 
 type DriverDriverBlock {
@@ -123,6 +148,12 @@ type Mutation {
   DriverUpdateDriverState(id: ID!, newState: Boolean!): CommandResponse
   "Update the Driver membership state"
   DriverUpdateDriverMembershipState(id: ID!, newState: Boolean!): CommandResponse
+  "Creates auth for the driver"
+  DriverCreateDriverAuth(id: ID!, username: String!, input: DriverAuthInput): CommandResponse
+  "Removes auth of the user (The user will be deleted from Keycloak)"
+  DriverRemoveDriverAuth(id: ID!): CommandResponse
+  "Changes driver password"
+  DriverResetDriverPassword(id: ID!, input: DriverPasswordInput): CommandResponse  
   "Remove one driver block"
   DriverRemoveDriverBlocking(id: ID!, blockKey: String!): CommandResponse
 }

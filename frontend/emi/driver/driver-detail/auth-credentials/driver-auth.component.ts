@@ -59,19 +59,20 @@ import { ToolbarService } from "../../../../toolbar/toolbar.service";
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'driver-membership',
-  templateUrl: './driver-membership.component.html',
-  styleUrls: ['./driver-membership.component.scss']
+  selector: 'driver-auth',
+  templateUrl: './driver-auth.component.html',
+  styleUrls: ['./driver-auth.component.scss']
 })
 // tslint:disable-next-line:class-name
-export class DriverMembershipComponent implements OnInit, OnDestroy {
+export class DriverAuthComponent implements OnInit, OnDestroy {
   // Subject to unsubscribe
   private ngUnsubscribe = new Subject();
 
   @Input('pageType') pageType: string;
   @Input('driver') driver: any;
 
-  membershipForm: any;
+  userAuthForm: any;
+
 
   constructor(
     private translationLoader: FuseTranslationLoaderService,
@@ -89,34 +90,115 @@ export class DriverMembershipComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.createMembershipForm();
+    this.userAuthForm = this.createUserAuthForm();
+  }
+
+    /**
+   * Creates the user auth reactive form
+   */
+  createUserAuthForm() {
+    return this.formBuilder.group(
+      {
+        username: [
+        {
+          value: this.driver.auth ? this.driver.auth.username : '',
+          disabled: (this.pageType !== 'new' && this.driver.auth && this.driver.auth.username)
+        },
+        Validators.compose([
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9._-]{8,}$')
+        ])
+      ],
+        password: [
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.pattern(
+              '^(?=[a-zA-Z0-9.]{8,}$)(?=.*?[a-z])(?=.*?[0-9]).*'
+            )
+          ])
+        ],
+        passwordConfirmation: ['', Validators.required],
+        temporary: [false, Validators.required]
+      },
+      {
+        validator: this.checkIfMatchingPasswords(
+          'password',
+          'passwordConfirmation'
+        )
+      }
+    );
   }
 
   /**
-   * Creates the membership form
+   * Create the driver auth on Keycloak
    */
-  createMembershipForm(){
-    this.membershipForm = new FormGroup({
-      active: new FormControl(this.driver && this.driver.membership ? this.driver.membership.active : false)
-    });
-  }
+  createDriverAuth() {
+    const data = this.userAuthForm.getRawValue();
 
-  onDriverMembershipStateChange() {
-    this.showConfirmationDialog$("DRIVER.UPDATE_MESSAGE", "DRIVER.UPDATE_TITLE")
-      .pipe(
-        mergeMap(ok => {
-          return this.DriverDetailservice.updateDriverDriverMembershipState$(this.driver._id, this.membershipForm.getRawValue().active);
-        }),
-        mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
-        filter((resp: any) => !resp.errors || resp.errors.length === 0),
-        takeUntil(this.ngUnsubscribe)
-      ).subscribe(result => {
-        this.showSnackBar('DRIVER.WAIT_OPERATION');
-      },
+    this.makeOperation$(this.DriverDetailservice.createDriverAuth$(this.driver._id, data))
+    .subscribe(
+        model => {
+          this.showSnackBar('DRIVER.WAIT_OPERATION');
+          this.userAuthForm.reset();
+        },
         error => {
           this.showSnackBar('DRIVER.ERROR_OPERATION');
           console.log('Error ==> ', error);
-        });
+        }
+    );
+  }
+
+  /**
+   * Remove the user auth
+   */
+  removeDriverAuth() {
+
+    this.makeOperation$(this.DriverDetailservice.removeDriverAuth$(this.driver._id))
+    .subscribe(
+        model => {
+          this.showSnackBar('DRIVER.WAIT_OPERATION');
+          this.driver.auth = null;
+          this.userAuthForm = this.createUserAuthForm();
+          this.userAuthForm.reset();
+        },
+        error => {
+          this.showSnackBar('DRIVER.ERROR_OPERATION');
+          console.log('Error ==> ', error);
+        }
+    );
+  }
+
+    /**
+   * Reset the user password
+   */
+  resetUserPassword() {
+    const data = this.userAuthForm.getRawValue();
+
+    this.makeOperation$(this.DriverDetailservice.resetDriverPassword$(this.driver._id, data))
+    .subscribe(
+        model => {
+          this.showSnackBar('DRIVER.WAIT_OPERATION');
+          this.userAuthForm.reset();
+        },
+        error => {
+          this.showSnackBar('DRIVER.ERROR_OPERATION');
+          console.log('Error ==> ', error);
+        }
+    );
+  }
+
+  /**
+   * Make observable operations
+   */
+  makeOperation$(observableOperation) {
+    return this.showConfirmationDialog$('DRIVER.UPDATE_MESSAGE', 'DRIVER.UPDATE_TITLE')
+    .pipe(
+      mergeMap(ok => observableOperation),
+      mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
+      filter((resp: any) => !resp.errors || resp.errors.length === 0),
+      takeUntil(this.ngUnsubscribe)
+    );
   }
 
   showConfirmationDialog$(dialogMessage, dialogTitle) {
@@ -202,7 +284,25 @@ export class DriverMembershipComponent implements OnInit, OnDestroy {
       });
   }
 
-
+  /**
+   * Checks if the passwords match, otherwise the form will be invalid.
+   * @param passwordKey new Password
+   * @param passwordConfirmationKey Confirmation of the new password
+   */
+  checkIfMatchingPasswords(
+    passwordKey: string,
+    passwordConfirmationKey: string
+  ) {
+    return (group: FormGroup) => {
+      const passwordInput = group.controls[passwordKey],
+        passwordConfirmationInput = group.controls[passwordConfirmationKey];
+      if (passwordInput.value !== passwordConfirmationInput.value) {
+        return passwordConfirmationInput.setErrors({ notEquivalent: true });
+      } else {
+        return passwordConfirmationInput.setErrors(null);
+      }
+    };
+  }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

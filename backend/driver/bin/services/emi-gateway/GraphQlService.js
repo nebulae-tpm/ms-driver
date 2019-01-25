@@ -218,6 +218,14 @@ class GraphQlService {
         fn: DriverCQRS.updateDriverMembershipState$,
         obj: DriverCQRS
       },
+      'emi-gateway.graphql.mutation.DriverCreateDriverAuth': {
+        fn: DriverCQRS.createDriverAuth$,
+        obj: DriverCQRS
+      },
+      'emi-gateway.graphql.mutation.DriverRemoveDriverAuth': {
+        fn: DriverCQRS.removeDriverAuth$,
+        obj: DriverCQRS
+      },
       "emi-gateway.graphql.mutation.driverRemoveDriverBlocking": {
         fn: DriverCQRS.removeDriverBlock$,
         obj: DriverCQRS

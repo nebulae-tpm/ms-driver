@@ -1,0 +1,55 @@
+<div class="tab-content p-24" fxLayout="column" fusePerfectScrollbar>
+
+
+    <form name="userAuthForm" [formGroup]="userAuthForm" class="user w-100-p" fxLayout="column" class="mat-white-bg p-24 mr-24 mb-24">
+        <div fxLayout="row">
+          <div fxFlex="80" *ngIf="user.auth && user.auth.userKeycloakId" fxLayoutAlign="start start" class="h2">{{'DRIVER.DETAILS.RESET_AUTH' | translate}}</div>
+          <div fxFlex="80" *ngIf="!user.auth || !user.auth.userKeycloakId" fxLayoutAlign="start start" class="h2">{{'DRIVER.DETAILS.CREATE_AUTH' | translate}}</div>
+          <button mat-raised-button *ngIf="user.auth && user.auth.userKeycloakId" (click)="removeUserAuth()">{{'DRIVER.DETAILS.REMOVE_USER_AUTH' | translate}}</button>
+        </div>
+
+        <mat-form-field class="w-100-p">
+          <input matInput name="username" formControlName="username" maxlength="15" placeholder="{{'DRIVER.DETAILS.USERNAME' | translate}}">
+          <mat-error *ngIf="userAuthForm.hasError('required', ['username'])">
+            {{'DRIVER.DETAILS.USERNAME_REQUIRED' | translate}}
+          </mat-error>
+          <mat-error *ngIf="userAuthForm.hasError('pattern', ['username'])">
+            {{'DRIVER.DETAILS.INVALID_USERNAME_FORMAT' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100-p">
+          <input matInput name="password" formControlName="password" placeholder="{{'DRIVER.DETAILS.NEW_PASSWORD' | translate}}" type="password">
+          <mat-error *ngIf="userAuthForm.hasError('required', ['password'])">
+            {{'DRIVER.DETAILS.NEW_PASSWORD_REQUIRED' | translate}}
+          </mat-error>
+          <mat-error *ngIf="userAuthForm.hasError('pattern', ['password'])">
+            {{'DRIVER.DETAILS.INVALID_PASSWORD' | translate}}
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field class="w-100-p">
+          <input matInput name="passwordConfirmation" formControlName="passwordConfirmation" placeholder="{{'DRIVER.DETAILS.PASSWORD_CONFIRMATION' | translate}}"
+            type="password">
+          <mat-error *ngIf="userAuthForm.hasError('required', 'passwordConfirmation')">
+            {{'DRIVER.DETAILS.PASSWORD_CONFIRMATION_REQUIRED' | translate}}
+          </mat-error>
+          <mat-error *ngIf="userAuthForm.hasError('notEquivalent', ['passwordConfirmation'])">
+            {{'DRIVER.DETAILS.NOT_EQUIVALENT_PASSWORD' | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="temporary" color="accent">
+          <label>{{'DRIVER.DETAILS.TEMPORARY' | translate}}</label>
+        </mat-slide-toggle>
+
+        <div class="mt-16">
+            <button mat-raised-button *ngIf="user._id && (!user.auth || !user.auth.userKeycloakId)" (click)="createDriverAuth()" [disabled]="userAuthForm.invalid || userAuthForm.pristine">{{'DRIVER.DETAILS.SAVE' | translate}}</button>
+            <button mat-raised-button *ngIf="user._id && user.auth && user.auth.userKeycloakId" (click)="resetUserPassword()" [disabled]="userAuthForm.invalid || userAuthForm.pristine">{{'DRIVER.DETAILS.RESET_PASSWORD' | translate}}</button>
+        </div>
+
+      </form>
+
+
+</div>
