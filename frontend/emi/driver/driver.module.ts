@@ -13,6 +13,7 @@ import { DriverDetailGeneralInfoComponent } from './driver-detail/general-info/d
 import { ToolbarService } from '../../toolbar/toolbar.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { DriverBlocksComponent } from './driver-detail/driver-blocks/driver-blocks.component';
+import { DriverMembershipComponent } from './driver-detail/membership/driver-membership.component';
 
 const routes: Routes = [
   {
@@ -36,7 +37,8 @@ const routes: Routes = [
     DriverListComponent,
     DriverDetailComponent,
     DriverDetailGeneralInfoComponent,
-    DriverBlocksComponent
+    DriverBlocksComponent,
+    DriverMembershipComponent
   ],
   entryComponents: [DialogComponent],
   providers: [ DriverService, DriverListService, DriverDetailService, DatePipe]

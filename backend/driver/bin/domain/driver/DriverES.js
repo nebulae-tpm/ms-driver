@@ -43,11 +43,23 @@ class DriverES {
     }
 
     /**
-     * updates the state on the materialized view according to the received data from the event store.
+     * updates the driver state on the materialized view according to the received data from the event store.
      * @param {*} DriverStateUpdatedEvent events that indicates the new state of the driver
      */
     handleDriverStateUpdated$(DriverStateUpdatedEvent) {          
         return DriverDA.updateDriverState$(DriverStateUpdatedEvent.aid, DriverStateUpdatedEvent.data)
+        .pipe(
+            mergeMap(result => broker.send$(MATERIALIZED_VIEW_TOPIC, `DriverDriverUpdatedSubscription`, result))
+        );
+    }
+
+    /**
+     * updates the driver membership state on the materialized view according to the received data from the event store.
+     * @param {*} DriverStateUpdatedEvent events that indicates the new state of the driver
+     */
+    handleDriverMembershipStateUpdated$(DriverMembershipStateUpdatedEvent) {          
+        console.log('handleDriverMembershipStateUpdated ', DriverMembershipStateUpdatedEvent);
+        return DriverDA.updateDriverMembershipState$(DriverMembershipStateUpdatedEvent.aid, DriverMembershipStateUpdatedEvent.data)
         .pipe(
             mergeMap(result => broker.send$(MATERIALIZED_VIEW_TOPIC, `DriverDriverUpdatedSubscription`, result))
         );

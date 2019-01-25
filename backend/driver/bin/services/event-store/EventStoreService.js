@@ -133,6 +133,10 @@ class EventStoreService {
         fn: DriverES.handleDriverStateUpdated$,
         obj: DriverES
       },
+      DriverMembershipStateUpdated: {
+        fn: DriverES.handleDriverMembershipStateUpdated$,
+        obj: DriverES
+      },
       DriverBlockRemoved: {
         fn: DriverES.handleDriverBlockRemoved$,
         obj: DriverES
@@ -161,6 +165,10 @@ class EventStoreService {
       {
         aggregateType: "Driver",
         eventType: "DriverStateUpdated"
+      },
+      {
+        aggregateType: "Driver",
+        eventType: "DriverMembershipStateUpdated"
       },
       {
         aggregateType: "Driver",

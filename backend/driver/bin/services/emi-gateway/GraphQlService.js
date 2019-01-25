@@ -171,6 +171,10 @@ class GraphQlService {
       },
       {
         aggregateType: "Driver",
+        messageType: "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState"
+      },
+      {
+        aggregateType: "Driver",
         messageType: "emi-gateway.graphql.mutation.driverRemoveDriverBlocking"
       },
       {
@@ -208,6 +212,10 @@ class GraphQlService {
       },
       "emi-gateway.graphql.mutation.DriverUpdateDriverState": {
         fn: DriverCQRS.updateDriverState$,
+        obj: DriverCQRS
+      },
+      "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState": {
+        fn: DriverCQRS.updateDriverMembershipState$,
         obj: DriverCQRS
       },
       "emi-gateway.graphql.mutation.driverRemoveDriverBlocking": {

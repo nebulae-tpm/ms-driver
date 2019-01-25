@@ -154,6 +154,28 @@ class DriverDA {
     );
   }
 
+    /**
+   * Updates the Driver membership state 
+   * @param {string} id Driver ID
+   * @param {boolean} newDriverState boolean that indicates the new Driver membership state
+   */
+  static updateDriverMembershipState$(id, newDriverMembershipState) {
+    const collection = mongoDB.db.collection(CollectionName);
+    
+    return defer(()=>
+        collection.findOneAndUpdate(
+          { _id: id},
+          {
+            $set: {'membership.active': newDriverMembershipState.state, modifierUser: newDriverMembershipState.modifierUser, modificationTimestamp: newDriverMembershipState.modificationTimestamp}
+          },{
+            returnOriginal: false
+          }
+        )
+    ).pipe(
+      map(result => result && result.value ? result.value : undefined)
+    );
+  }
+
 }
 /**
  * @returns {DriverDA}

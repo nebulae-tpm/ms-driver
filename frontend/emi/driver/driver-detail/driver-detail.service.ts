@@ -6,6 +6,7 @@ import {
   DriverCreateDriver,
   DriverUpdateDriverGeneralInfo,
   DriverUpdateDriverState,
+  DriverUpdateDriverMembershipState,
   DriverDriver,
   DriverDriverUpdatedSubscription,
   DriverDriverBlocks,
@@ -100,6 +101,18 @@ export class DriverDetailService {
         mutation: DriverUpdateDriverState,
         variables: {
           id: id,
+          newState: newState
+        },
+        errorPolicy: 'all'
+      });
+  }
+
+  updateDriverDriverMembershipState$(driverId: String, newState: boolean) {
+    return this.gateway.apollo
+      .mutate<any>({
+        mutation: DriverUpdateDriverMembershipState,
+        variables: {
+          id: driverId,
           newState: newState
         },
         errorPolicy: 'all'

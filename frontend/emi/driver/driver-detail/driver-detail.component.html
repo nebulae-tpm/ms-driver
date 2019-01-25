@@ -20,7 +20,7 @@
           <div fxLayout="column" fxLayoutAlign="start start" *fuseIfOnDom>
 
             <div class="h2" *ngIf="driver && driver._id">
-              {{driver.name}}
+              {{driver.auth && driver.auth.username ? driver.auth.username: driver.generalInfo.name}}
             </div>
 
             <div class="h2" *ngIf="!driver || (driver && !driver._id)">
@@ -44,9 +44,11 @@
             <driver-general-info [pageType]="pageType" [driver]="driver" *ngIf="pageType">
             </driver-general-info>
           </mat-tab>
-          <mat-tab label="{{'DRIVER.DETAILS.TABS.MEMBERSHIP' | translate}}">           
+          <mat-tab label="{{'DRIVER.DETAILS.TABS.MEMBERSHIP' | translate}}">
+              <driver-membership [driver]="driver" *ngIf="pageType && pageType == 'edit'"></driver-membership>
           </mat-tab>
-          <mat-tab label="{{'DRIVER.DETAILS.TABS.CREDENTIALS' | translate}}">           
+          <mat-tab label="{{'DRIVER.DETAILS.TABS.CREDENTIALS' | translate}}">
+
           </mat-tab>
           <mat-tab label="{{'DRIVER.DETAILS.TABS.BLOCKS' | translate}}">
             <driver-blocks [driver]="driver" *ngIf="pageType && pageType == 'edit'">

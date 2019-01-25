@@ -1,0 +1,13 @@
+<div class="tab-content p-24" fxLayout="column" fusePerfectScrollbar>
+
+
+  <form  name="membershipForm" [formGroup]="membershipForm"  fxLayout="column wrap" class="mat-white-bg p-24 mr-24 mb-24">
+    <label>{{'DRIVER.DETAILS.MEMBERSHIP_STATE' | translate}}</label>
+    <mat-slide-toggle formControlName="active" color="accent" (change)="onDriverMembershipStateChange($event)">
+      <label *ngIf="membershipForm.controls['active'].value">{{'DRIVER.DETAILS.ENABLED' | translate}}</label>
+      <label *ngIf="!membershipForm.controls['active'].value">{{'DRIVER.DETAILS.DISABLED' | translate}}</label>
+    </mat-slide-toggle>
+  </form>
+
+
+</div>

@@ -12,6 +12,8 @@ type DriverDriver {
   generalInfo: DriverGeneralInfo
   "Driver state"
   state: Boolean!
+  "Driver membership"
+  membership: Membership
   "Creation timestamp"
   creationTimestamp: BigInt!
   "Creator user"
@@ -22,6 +24,11 @@ type DriverDriver {
   modifierUser: String!
   "Business ID"
   businessId: String!
+}
+
+type Membership {
+  "Membership state"
+  active: Boolean
 }
 
 type DriverGeneralInfo {
@@ -114,6 +121,8 @@ type Mutation {
   DriverUpdateDriverGeneralInfo(id:ID!, input: DriverDriverGeneralInfoInput!): CommandResponse
   "Update the Driver state"
   DriverUpdateDriverState(id: ID!, newState: Boolean!): CommandResponse
+  "Update the Driver membership state"
+  DriverUpdateDriverMembershipState(id: ID!, newState: Boolean!): CommandResponse
   "Remove one driver block"
   DriverRemoveDriverBlocking(id: ID!, blockKey: String!): CommandResponse
 }

@@ -213,6 +213,41 @@ class DriverCQRS {
     );
   }
 
+    /**
+   * Edit the driver membership state
+   */
+  updateDriverMembershipState$({ root, args, jwt }, authToken) {
+    const driver = {
+      _id: args.id,
+      state: args.newState,
+      modifierUser: authToken.preferred_username,
+      modificationTimestamp: new Date().getTime()
+    };
+    console.log('updateDriverMembershipState CQRS ', args);
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "Driver",
+      "updateDriverMembershipState$",
+      PERMISSION_DENIED,
+      ["PLATFORM-ADMIN"]
+    ).pipe(
+      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+        new Event({
+          eventType: "DriverMembershipStateUpdated",
+          eventTypeVersion: 1,
+          aggregateType: "Driver",
+          aggregateId: driver._id,
+          data: driver,
+          user: authToken.preferred_username
+        })
+      )
+      ),
+      map(() => ({ code: 200, message: `Membership state of the driver with id: ${driver._id} has been updated` })),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+  }
+
   getDriverBlocks$({ root, args, jwt }, authToken) { 
     console.log(args);
 

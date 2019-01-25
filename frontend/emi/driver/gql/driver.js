@@ -47,6 +47,9 @@ export const DriverDriver = gql`
         phone
       }
       state
+      membership {
+        active
+      }
       creationTimestamp
       creatorUser
       modificationTimestamp
@@ -68,6 +71,9 @@ export const DriverDrivers = gql`
         phone
       }
       state
+      membership {
+        active
+      }
       creationTimestamp
       creatorUser
       modificationTimestamp
@@ -112,6 +118,16 @@ export const RemoveDriverBlocking = gql `
 export const DriverUpdateDriverState = gql `
   mutation DriverUpdateDriverState($id: ID!, $newState: Boolean!){
     DriverUpdateDriverState(id: $id, newState: $newState){
+      code
+      message
+    }
+  }
+`;
+
+
+export const DriverUpdateDriverMembershipState = gql `
+  mutation DriverUpdateDriverMembershipState($id: ID!, $newState: Boolean!){
+    DriverUpdateDriverMembershipState(id: $id, newState: $newState){
       code
       message
     }

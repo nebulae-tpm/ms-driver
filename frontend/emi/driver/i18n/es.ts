@@ -42,8 +42,9 @@ export const locale = {
         LASTNAME_REQUIRED: 'Apellido requerido',
         EMAIL_REQUIRED: 'Email requerido',
         PHONE_REQUIRED: 'Teléfono requerido',
-        EMAIL_FORMAT: 'Formato de email inválido'
-      },      
+        EMAIL_FORMAT: 'Formato de email inválido',
+        MEMBERSHIP_STATE: 'Estado de la membresía'
+      },
       BLOCKS: {
         KEY: 'Bloqueo',
         NOTES: 'Notas',

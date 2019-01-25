@@ -169,6 +169,27 @@ module.exports = {
                 mergeMap(response => getResponseFromBackEnd$(response))
             ).toPromise();
         },
+        DriverUpdateDriverMembershipState(root, args, context) {
+            return RoleValidator.checkPermissions$(
+              context.authToken.realm_access.roles,
+              "Driver",
+              "DriverUpdateDriverMembershipState",
+              PERMISSION_DENIED_ERROR_CODE,
+              "Permission denied",
+              ["PLATFORM-ADMIN"]
+            ).pipe(
+                mergeMap(() =>
+                  context.broker.forwardAndGetReply$(
+                    "Driver",
+                    "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState",
+                    { root, args, jwt: context.encodedToken },
+                    2000
+                  )
+                ),
+                catchError(err => handleError$(err, "updateDriverState")),
+                mergeMap(response => getResponseFromBackEnd$(response))
+            ).toPromise();
+        },
         DriverRemoveDriverBlocking(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
