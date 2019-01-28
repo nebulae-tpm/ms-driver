@@ -27,7 +27,7 @@ class DriverDA {
    */
   static getDriverByFilter$(filterQuery) {
     const collection = mongoDB.db.collection(CollectionName);
-    return Rx.Observable.defer(() => collection.findOne(filterQuery));
+    return defer(() => collection.findOne(filterQuery));
   }
 
   /**
@@ -183,6 +183,71 @@ class DriverDA {
     ).pipe(
       map(result => result && result.value ? result.value : undefined)
     );
+  }
+
+  /**
+   * Updates the user auth
+   * @param {*} userId User ID
+   * @param {*} userAuth Object
+   * @param {*} userAuth.userKeycloakId user keycloak ID
+   * @param {*} userAuth.username username
+   */
+  static updateUserAuth$(userId, userAuth) {
+    const collection = mongoDB.db.collection(CollectionName);
+
+    return defer(()=>
+        collection.findOneAndUpdate(
+          { _id: userId },
+          {
+            $set: {auth: userAuth}
+          },{
+            returnOriginal: false
+          }
+        )
+    )
+    .pipe(
+      map(result => result && result.value ? result.value : undefined)
+    );
+  }
+
+    /**
+   * Removes the user auth
+   * @param {*} userId User ID
+   * @param {*} userAuth Object
+   * @param {*} userAuth.userKeycloakId user keycloak ID
+   * @param {*} userAuth.username username
+   */
+  static removeUserAuth$(userId, userAuth) {
+    const collection = mongoDB.db.collection(CollectionName);
+
+    return defer(()=>
+        collection.findOneAndUpdate(
+          { _id: userId },
+          {
+            $unset: {auth: ""}
+          },{
+            returnOriginal: false
+          }
+        )
+    )
+    .pipe(
+      map(result => result && result.value ? result.value : undefined)
+    )
+  }
+
+    /**
+   * Gets user by email
+   * @param {String} email User email
+   * @param {String} ignoreUserId if this value is enter, this user will be ignore in the query 
+   */
+  static getDriverByEmail$(email, ignoreUserId) {
+    let query = {      
+      'generalInfo.email': email
+    };
+    if(ignoreUserId){
+      query._id = {$ne: ignoreUserId};
+    }
+    return this.getDriverByFilter$(query);
   }
 
 }

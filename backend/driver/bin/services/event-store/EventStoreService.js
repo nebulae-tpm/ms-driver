@@ -137,6 +137,18 @@ class EventStoreService {
         fn: DriverES.handleDriverMembershipStateUpdated$,
         obj: DriverES
       },
+      DriverAuthCreated: {
+        fn: DriverES.handleDriverAuthCreated$,
+        obj: DriverES 
+      },
+      DriverAuthDeleted: {
+        fn: DriverES.handleDriverAuthDeleted$,
+        obj: DriverES 
+      },
+      DriverAuthDeleted: {
+        fn: DriverES.handleDriverAuthDeleted$,
+        obj: DriverES 
+      },
       DriverBlockRemoved: {
         fn: DriverES.handleDriverBlockRemoved$,
         obj: DriverES

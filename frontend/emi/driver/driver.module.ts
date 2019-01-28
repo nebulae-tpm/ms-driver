@@ -14,6 +14,7 @@ import { ToolbarService } from '../../toolbar/toolbar.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { DriverBlocksComponent } from './driver-detail/driver-blocks/driver-blocks.component';
 import { DriverMembershipComponent } from './driver-detail/membership/driver-membership.component';
+import { DriverAuthComponent } from './driver-detail/auth-credentials/driver-auth.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     DriverListComponent,
     DriverDetailComponent,
     DriverDetailGeneralInfoComponent,
+    DriverAuthComponent,
     DriverBlocksComponent,
     DriverMembershipComponent
   ],

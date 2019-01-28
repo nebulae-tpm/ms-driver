@@ -85,7 +85,7 @@ export class DriverDetailComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     )
     .subscribe((driver: any) => {
-      this.driver = driver;
+      this.driver = JSON.parse(JSON.stringify(driver));
       this.pageType = (driver && driver._id) ? 'edit' : 'new';
       console.log('this.pageType => ', this.pageType);
     }, e => console.log(e));

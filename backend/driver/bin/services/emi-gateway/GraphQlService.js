@@ -171,6 +171,18 @@ class GraphQlService {
       },
       {
         aggregateType: "Driver",
+        messageType: "emi-gateway.graphql.mutation.DriverCreateDriverAuth"
+      },
+      {
+        aggregateType: "Driver",
+        messageType: "emi-gateway.graphql.mutation.DriverRemoveDriverAuth"
+      },
+      {
+        aggregateType: "Driver",
+        messageType: "emi-gateway.graphql.mutation.DriverResetDriverPassword"
+      },
+      {
+        aggregateType: "Driver",
         messageType: "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState"
       },
       {
@@ -224,6 +236,10 @@ class GraphQlService {
       },
       'emi-gateway.graphql.mutation.DriverRemoveDriverAuth': {
         fn: DriverCQRS.removeDriverAuth$,
+        obj: DriverCQRS
+      },
+      'emi-gateway.graphql.mutation.DriverResetDriverPassword': {
+        fn: DriverCQRS.resetDriverPassword$,
         obj: DriverCQRS
       },
       "emi-gateway.graphql.mutation.driverRemoveDriverBlocking": {

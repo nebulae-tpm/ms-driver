@@ -12,7 +12,8 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
+  FormArray
 } from '@angular/forms';
 
 import { Router, ActivatedRoute } from '@angular/router';
@@ -92,6 +93,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    const englishState = this.driver.generalInfo.languages.find(language => language.name === 'english');
     this.driverGeneralInfoForm = new FormGroup({
       documentType: new FormControl(this.driver ? (this.driver.generalInfo || {}).documentType : '', [Validators.required]),
       document: new FormControl(this.driver ? (this.driver.generalInfo || {}).document : '', [Validators.required]),
@@ -99,7 +101,15 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
       lastname: new FormControl(this.driver ? (this.driver.generalInfo || {}).lastname : '', [Validators.required]),
       email: new FormControl(this.driver ? (this.driver.generalInfo || {}).email : '', [Validators.required, Validators.email]),
       phone: new FormControl(this.driver ? (this.driver.generalInfo || {}).phone : '', [Validators.required]),
+      languages: new FormArray([
+        new FormGroup({
+          name: new FormControl('english'),
+          active: new FormControl(englishState ? englishState.active : false)
+        }),
+      ])
     });
+
+
 
     this.driverStateForm = new FormGroup({
       state: new FormControl(this.driver ? this.driver.state : true)
@@ -152,8 +162,10 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
             name: this.driverGeneralInfoForm.getRawValue().name,
             lastname: this.driverGeneralInfoForm.getRawValue().lastname,
             email: this.driverGeneralInfoForm.getRawValue().email,
-            phone: this.driverGeneralInfoForm.getRawValue().phone
+            phone: this.driverGeneralInfoForm.getRawValue().phone,
+            languages:  this.driverGeneralInfoForm.getRawValue().languages
           };
+          console.log('this.driverGeneralInfoForm.getRawValue() => ', this.driverGeneralInfoForm.getRawValue());
           return this.DriverDetailservice.updateDriverDriverGeneralInfo$(this.driver._id, generalInfoinput);
         }),
         mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),

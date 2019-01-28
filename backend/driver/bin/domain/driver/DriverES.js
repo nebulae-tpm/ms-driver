@@ -65,6 +65,46 @@ class DriverES {
         );
     }
 
+      /**
+     * updates the user state on the materialized view according to the received data from the event store.
+     * @param {*} userAuthCreatedEvent events that indicates the new state of the user
+     */
+    handleDriverAuthCreated$(driverAuthCreatedEvent) {
+        return DriverDA.updateUserAuth$(
+            driverAuthCreatedEvent.aid,
+            driverAuthCreatedEvent.data
+        )
+        .pipe(
+            mergeMap(result => {
+                return broker.send$(
+                    MATERIALIZED_VIEW_TOPIC,
+                    `DriverDriverUpdatedSubscription`,
+                    result
+                );
+            })
+        );
+    }
+
+    /**
+     * Removes the user auth on the materialized view.
+     * @param {*} userAuthDeletedEvent events that indicates the user to which the auth credentials will be deleted
+     */
+    handleDriverAuthDeleted$(driverAuthDeletedEvent) {
+        return DriverDA.removeUserAuth$(
+            driverAuthDeletedEvent.aid,
+            driverAuthDeletedEvent.data
+        )
+        .pipe(
+            mergeMap(result => {
+                return broker.send$(
+                    MATERIALIZED_VIEW_TOPIC,
+                    `DriverDriverUpdatedSubscription`,
+                    result
+                );
+            })
+        );
+    }
+
     handleDriverBlockRemoved$(driverBlockRemovedEvt){
         console.log('############### handleDriverBlockRemoved', driverBlockRemovedEvt);
         return of(driverBlockRemovedEvt)
@@ -79,7 +119,6 @@ class DriverES {
     handleCleanExpiredDriverBlocks$(DriverBlockRemovedEvt){
         console.log('############### handleCleanExpiredBlocks$', DriverBlockRemovedEvt);
         return DriverBlocksDA.removeExpiredBlocks$(DriverBlockRemovedEvt.timestamp);
-
     }
 
 }

@@ -64,6 +64,7 @@ export class DriverDetailService {
   }
 
   createDriverDriver$(driver: any) {
+    console.log('DRIVER ======> ', driver);
     return this.createOperation$(driver)
     .pipe(
       mergeMap(() => {
@@ -80,6 +81,7 @@ export class DriverDetailService {
   }
 
   updateDriverDriverGeneralInfo$(id: String, driverGeneralInfo: any) {
+    console.log('DRIVER ======> ', driverGeneralInfo);
     return this.updateOperation$(driverGeneralInfo)
     .pipe(
       mergeMap(() => {
@@ -150,13 +152,13 @@ export class DriverDetailService {
 
   /**
    * Removes auth credentials from user
-   * @param userId Id of the user
+   * @param id Id of the driver
    */
-  removeDriverAuth$(userId): Observable<any> {
+  removeDriverAuth$(id): Observable<any> {
     return this.gateway.apollo.mutate<any>({
       mutation: DriverRemoveDriverAuth,
       variables: {
-        userId: userId
+        id: id
       },
       errorPolicy: 'all'
     });
@@ -164,11 +166,11 @@ export class DriverDetailService {
 
     /**
    * Resets the user password.
-   * @param userId id of the user
+   * @param id id of the driver
    * @param userPassword new password
    * @param businessId Id of the business to which the user belongs
    */
-  resetDriverPassword$(userId, userPassword): Observable<any> {
+  resetDriverPassword$(id, userPassword): Observable<any> {
     const userPasswordInput = {
       password: userPassword.password,
       temporary: userPassword.temporary || false
@@ -177,7 +179,7 @@ export class DriverDetailService {
     return this.gateway.apollo.mutate<any>({
       mutation: DriverResetDriverPassword,
       variables: {
-        userId: userId,
+        id: id,
         input: userPasswordInput
       },
       errorPolicy: "all"

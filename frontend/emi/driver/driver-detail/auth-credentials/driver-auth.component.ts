@@ -12,7 +12,8 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
+  FormGroupDirective
 } from '@angular/forms';
 
 import { Router, ActivatedRoute } from '@angular/router';
@@ -133,14 +134,19 @@ export class DriverAuthComponent implements OnInit, OnDestroy {
   /**
    * Create the driver auth on Keycloak
    */
-  createDriverAuth() {
+  createDriverAuth(formDirective: FormGroupDirective) {
     const data = this.userAuthForm.getRawValue();
 
     this.makeOperation$(this.DriverDetailservice.createDriverAuth$(this.driver._id, data))
     .subscribe(
         model => {
           this.showSnackBar('DRIVER.WAIT_OPERATION');
+          formDirective.resetForm();
+          this.driver.auth = {
+            username: data.username
+          };
           this.userAuthForm.reset();
+          this.userAuthForm = this.createUserAuthForm();
         },
         error => {
           this.showSnackBar('DRIVER.ERROR_OPERATION');
@@ -159,8 +165,8 @@ export class DriverAuthComponent implements OnInit, OnDestroy {
         model => {
           this.showSnackBar('DRIVER.WAIT_OPERATION');
           this.driver.auth = null;
-          this.userAuthForm = this.createUserAuthForm();
           this.userAuthForm.reset();
+          this.userAuthForm = this.createUserAuthForm();
         },
         error => {
           this.showSnackBar('DRIVER.ERROR_OPERATION');
@@ -172,14 +178,16 @@ export class DriverAuthComponent implements OnInit, OnDestroy {
     /**
    * Reset the user password
    */
-  resetUserPassword() {
+  resetDriverPassword(formDirective: FormGroupDirective) {
     const data = this.userAuthForm.getRawValue();
 
     this.makeOperation$(this.DriverDetailservice.resetDriverPassword$(this.driver._id, data))
     .subscribe(
         model => {
           this.showSnackBar('DRIVER.WAIT_OPERATION');
-          this.userAuthForm.reset();
+          //this.userAuthForm.reset();
+          formDirective.resetForm();
+          this.userAuthForm = this.createUserAuthForm();
         },
         error => {
           this.showSnackBar('DRIVER.ERROR_OPERATION');

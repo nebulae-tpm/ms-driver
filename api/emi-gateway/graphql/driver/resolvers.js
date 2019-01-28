@@ -193,7 +193,7 @@ module.exports = {
         DriverCreateDriverAuth(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              contextName,
+              "Driver",
               "DriverCreateDriverAuth",
               PERMISSION_DENIED_ERROR_CODE,
               "Permission denied",
@@ -202,7 +202,7 @@ module.exports = {
               .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
-                    "User",
+                    "Driver",
                     "emi-gateway.graphql.mutation.DriverCreateDriverAuth",
                     { root, args, jwt: context.encodedToken },
                     2000
@@ -225,7 +225,7 @@ module.exports = {
               .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
-                    "User",
+                    "Driver",
                     "emi-gateway.graphql.mutation.DriverResetDriverPassword",
                     { root, args, jwt: context.encodedToken },
                     2000
@@ -248,7 +248,7 @@ module.exports = {
               .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
-                    "User",
+                    "Driver",
                     "emi-gateway.graphql.mutation.DriverRemoveDriverAuth",
                     { root, args, jwt: context.encodedToken },
                     2000

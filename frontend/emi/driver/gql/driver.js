@@ -45,6 +45,14 @@ export const DriverDriver = gql`
         lastname
         email
         phone
+        languages {
+          name
+          active
+        }
+      }
+      auth {
+        userKeycloakId
+        username
       }
       state
       membership {
@@ -69,6 +77,14 @@ export const DriverDrivers = gql`
         lastname
         email
         phone
+        languages {
+          name
+          active
+        }
+      }
+      auth {
+        userKeycloakId
+        username
       }
       state
       membership {
@@ -135,7 +151,7 @@ export const DriverUpdateDriverMembershipState = gql `
 `;
 
 export const DriverCreateDriverAuth = gql`
-  mutation DriverCreateDriverAuth($id: ID!, $username: String!, $input: AuthInput) {
+  mutation DriverCreateDriverAuth($id: ID!, $username: String!, $input: DriverAuthInput) {
     DriverCreateDriverAuth(id: $id, username: $username, input: $input) {
       code
       message
@@ -153,7 +169,7 @@ export const DriverRemoveDriverAuth = gql`
 `;
 
 export const DriverResetDriverPassword = gql`
-  mutation DriverResetDriverPassword($id: ID!, $input: UserPasswordInput) {
+  mutation DriverResetDriverPassword($id: ID!, $input: DriverPasswordInput) {
     DriverResetDriverPassword(id: $id, input: $input) {
       code
       message
@@ -173,6 +189,10 @@ export const DriverDriverUpdatedSubscription = gql`
         lastname
         email
         phone
+        languages {
+          name
+          active
+        }
       }
       state
       creationTimestamp

@@ -4,6 +4,7 @@ const uuidv4 = require("uuid/v4");
 const Event = require("@nebulae/event-store").Event;
 const eventSourcing = require("../../tools/EventSourcing")();
 const DriverDA = require("../../data/DriverDA");
+const DriverKeycloakDA = require("../../data/DriverKeycloakDA");
 const DriverValidatorHelper = require('./DriverValidatorHelper');
 const broker = require("../../tools/broker/BrokerFactory")();
 const MATERIALIZED_VIEW_TOPIC = "materialized-view-updates";
@@ -138,7 +139,7 @@ class DriverCQRS {
           aggregateId: data.driver._id,
           data: data.driver,
           user: authToken.preferred_username
-        })).mapTo(data)
+        })).pipe(mapTo(data))
       ),
       map(data => ({ code: 200, message: `Driver with id: ${data.driver._id} has been created` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
@@ -178,7 +179,7 @@ class DriverCQRS {
           aggregateId: driver._id,
           data: driver,
           user: authToken.preferred_username
-        })).mapTo(data)
+        })).pipe(mapTo(data))
       ),
       map(data => ({ code: 200, message: `General info of the driver with id: ${data.driver._id} has been updated` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
@@ -217,7 +218,7 @@ class DriverCQRS {
           aggregateId: driver._id,
           data: driver,
           user: authToken.preferred_username
-        })).mapTo(data)
+        })).pipe(mapTo(data))
       ),
       map(() => ({ code: 200, message: `State of the driver with id: ${driver._id} has been updated` })),
       mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
@@ -229,6 +230,7 @@ class DriverCQRS {
    * Create the driver auth
    */
   createDriverAuth$({ root, args, jwt }, authToken) {
+    console.log('createDriverAuth');
     const driver = {
       _id: args.id,
       authInput: args.input,
@@ -245,15 +247,38 @@ class DriverCQRS {
     ).pipe(
       mergeMap(roles => 
         DriverDA.getDriver$(driver._id)
-        .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverCreateDriverAuthValidator$(driver, authToken, roles, userMongo)))
+        .pipe( 
+          //Validate the data
+          mergeMap(userMongo => DriverValidatorHelper.checkDriverCreateDriverAuthValidator$(driver, authToken, roles, userMongo)),
+          // Creates the user on Keycloak
+          mergeMap(data => DriverKeycloakDA.createUser$(data.userMongo, data.driver.authInput)
+          .pipe(
+            //Assignes a password to the user
+            mergeMap(userKeycloak => {
+              const password = {
+                temporary: data.driver.authInput.temporary || false,
+                value: data.driver.authInput.password
+              }
+              return DriverKeycloakDA.resetUserPassword$(userKeycloak.id, password)
+              .pipe(
+                //Adds DRIVER role
+                mergeMap(reset => DriverKeycloakDA.addRolesToTheUser$(userKeycloak.id, ['DRIVER'])),
+                mapTo(userKeycloak)
+              )
+            })
+          ))          
+        )
       ),
-      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+      mergeMap(userKeycloak => eventSourcing.eventStore.emitEvent$(
         new Event({
           eventType: "DriverAuthCreated",
           eventTypeVersion: 1,
           aggregateType: "Driver",
           aggregateId: driver._id,
-          data: driver,
+          data: {
+            userKeycloakId: userKeycloak.id,
+            username: userKeycloak.username
+          },
           user: authToken.preferred_username
         })
       )
@@ -264,44 +289,95 @@ class DriverCQRS {
     );
   }
 
-  // /**
-  //  * Removes the driver auth
-  //  */
-  // removeUserAuth$({ root, args, jwt }, authToken) {
-  //   const driver = {
-  //     _id: args.id,
-  //     authInput: args.input,
-  //     modifierUser: authToken.preferred_username,
-  //     modificationTimestamp: new Date().getTime()
-  //   };
+  /**
+   * Reset driver password
+   */
+  resetDriverPassword$({ root, args, jwt }, authToken) {
+    const driver = {
+      _id: args.id,
+      passwordInput: args.input,
+      modifierUser: authToken.preferred_username,
+      modificationTimestamp: new Date().getTime()
+    };
 
-  //   return RoleValidator.checkPermissions$(
-  //     authToken.realm_access.roles,
-  //     "Driver",
-  //     "createDriverAuth$",
-  //     PERMISSION_DENIED_ERROR_CODE,
-  //     ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
-  //   ).pipe(
-  //     mergeMap(roles => 
-  //       DriverDA.getDriver$(driver._id)
-  //       .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverCreateDriverAuthValidator$(driver, authToken, roles, userMongo)))
-  //     ),
-  //     mergeMap(() => eventSourcing.eventStore.emitEvent$(
-  //       new Event({
-  //         eventType: "DriverAuthCreated",
-  //         eventTypeVersion: 1,
-  //         aggregateType: "Driver",
-  //         aggregateId: driver._id,
-  //         data: driver,
-  //         user: authToken.preferred_username
-  //       })
-  //     )
-  //     ),
-  //     map(() => ({ code: 200, message: `Auth credential of the driver with id: ${driver._id} has been updated` })),
-  //     mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
-  //     catchError(err => GraphqlResponseTools.handleError$(err))
-  //   );
-  // }
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "Driver",
+      "resetDriverPassword$",
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
+    ).pipe(
+      mergeMap(roles => 
+        DriverDA.getDriver$(driver._id)
+        .pipe( mergeMap(userMongo => DriverValidatorHelper.checkDriverUpdateDriverAuthValidator$(driver, authToken, roles, userMongo)))
+      ),
+      mergeMap(() => eventSourcing.eventStore.emitEvent$(
+        new Event({
+          eventType: "UserAuthPasswordUpdated",
+          eventTypeVersion: 1,
+          aggregateType: "User",
+          aggregateId: driver._id,
+          data: {},
+          user: authToken.preferred_username
+        }))
+      ),
+      map(() => ({ code: 200, message: `Password of the driver with id: ${driver._id} has been changed` })),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+  }
+
+  /**
+   * Removes the driver auth
+   */
+  removeDriverAuth$({ root, args, jwt }, authToken) {
+    const driver = {
+      _id: args.id,
+      modifierUser: authToken.preferred_username,
+      modificationTimestamp: new Date().getTime()
+    };
+
+    return RoleValidator.checkPermissions$(
+      authToken.realm_access.roles,
+      "Driver",
+      "removeUserAuth$",
+      PERMISSION_DENIED_ERROR_CODE,
+      ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
+    ).pipe(
+      mergeMap(roles => 
+        DriverDA.getDriver$(driver._id)
+        .pipe( 
+          mergeMap(userMongo => DriverValidatorHelper.checkDriverRemoveDriverAuthValidator$(driver, authToken, roles, userMongo)),
+          mergeMap(data => DriverKeycloakDA.removeUser$(data.userMongo.auth.userKeycloakId)
+            .pipe(
+              mapTo(data),
+              // If there was an error, check if the user does not exist
+              catchError(error => {
+                return DriverValidatorHelper.checkIfUserWasDeletedOnKeycloak$(userMongo.auth.userKeycloakId);
+              })
+            )
+          ),
+        )
+      ),
+      mergeMap(data => eventSourcing.eventStore.emitEvent$(
+        new Event({
+          eventType: "DriverAuthDeleted",
+          eventTypeVersion: 1,
+          aggregateType: "Driver",
+          aggregateId: driver._id,
+          data: {
+            userKeycloakId: data.userMongo.auth.userKeycloakId,
+            username: data.userMongo.auth.username
+          },
+          user: authToken.preferred_username
+        })
+      )
+      ),
+      map(() => ({ code: 200, message: `Auth credential of the driver with id: ${driver._id} has been deleted` })),
+      mergeMap(r => GraphqlResponseTools.buildSuccessResponse$(r)),
+      catchError(err => GraphqlResponseTools.handleError$(err))
+    );
+  }
 
 
 

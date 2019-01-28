@@ -43,7 +43,24 @@ export const locale = {
         EMAIL_REQUIRED: 'Email requerido',
         PHONE_REQUIRED: 'Teléfono requerido',
         EMAIL_FORMAT: 'Formato de email inválido',
-        MEMBERSHIP_STATE: 'Estado de la membresía'
+        MEMBERSHIP_STATE: 'Estado de la membresía',
+        USERNAME: 'Nombre de usuario',
+        NEW_PASSWORD: 'Nueva contraseña',
+        PASSWORD_CONFIRMATION: 'Confirmar nueva contraseña',
+        TEMPORARY: 'Temporal',
+        CREATE_AUTH: 'Crear credencial de autenticación',
+        RESET_AUTH: 'Cambiar credencial de autenticación',
+        USERNAME_REQUIRED: 'Nombre de usuario requerido',
+        NEW_PASSWORD_REQUIRED: 'Nueva contraseña requerida',
+        INVALID_USERNAME_FORMAT: 'El nombre de usuario debe contener como mínimo 8 caracteres y solo puede estar compuesto por números, letras, puntos y guiones.',
+        INVALID_PASSWORD: 'Contraseña inválida',
+        PASSWORD_CONFIRMATION_REQUIRED: 'COnfirmación de contraseña requerida',
+        NOT_EQUIVALENT_PASSWORD: 'La contraseña de verificación no coincide.',
+        REMOVE_USER_AUTH: 'Eliminar credenciales de usuario',
+        LANGUAGES_TITLE: 'Otros idiomas',
+        LANGUAGES: {
+          english: 'Ingles'
+        }   
       },
       BLOCKS: {
         KEY: 'Bloqueo',
@@ -55,6 +72,7 @@ export const locale = {
       },
       ACTIVE: 'Activo',
       CREATE: 'Crear',
+      SAVE: 'Guardar',
       UPDATE: 'Guardar',
       UPDATE_TITLE: 'Actualizar',
       UPDATE_MESSAGE: '¿Estás seguro que desea realizar la modificación?',
@@ -66,11 +84,25 @@ export const locale = {
       CLOSE: 'Cerrar',
       WAIT_OPERATION: 'Operación en proceso, en caso de no recibir respuesta, verificar si los cambios realizados fueron aplicados exitosamente.',
       SELECT_BUSINESS: 'Debe seleccionar una unidad de negocio antes de realizar la creación.',
-      ERROR_OPERATION: 'Error realizando operación'
+      ERROR_OPERATION: 'Error realizando operación',
+      RESET_PASSWORD: 'Cambiar contraseña'
     },
     ERRORS: {
       1: 'Error interno de servidor',
       2: 'Permiso denegado.',
+      15001: 'Error interno de servidor',
+      20001: 'Error interno de servidor',
+      20002: 'Permiso denegado.',
+      20010: 'Datos faltantes del usuario',
+      20011: 'El nombre de usuario ya está siendo usado',
+      20012: 'Nombre de usuario invalido, el nombre de usuario debe contener como mínimo 8 caracteres y estar compuesto por al menos un (1) número y una (1) letra minúscula.',
+      20014: 'El email ya está siendo usado',
+      20015: 'Permiso denegado, no es posible actualizar la información de su propio usuario',
+      20016: 'Permiso denegado, no tiene permisos para actualizar un usuario perteneciente a otra unidad de negocio',
+      20017: 'Credenciales autenticación invalidas',
+      20018: 'Usuario ya tiene registrada credenciales de autenticación',
+      20019: 'Usuario no encontrado',
+      20020: 'El usuario no tiene credenciales de autenticación',
     }
   }
 };

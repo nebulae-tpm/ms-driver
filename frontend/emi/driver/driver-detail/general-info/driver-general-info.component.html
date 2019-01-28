@@ -74,6 +74,21 @@
       </mat-form-field>
       <!-- DRIVER CONTACT PHONE -->
 
+      <div fxFlex="100" fxLayout="column">
+        <br>
+        <div fxFlex.gt-xs="100" fxFlex="100" class="h2">{{'DRIVER.DETAILS.LANGUAGES_TITLE' | translate}}</div>
+          <!-- LANGUAGES -->
+          <section class="languages-section">
+            <div formArrayName="languages" *ngFor="let language of driverGeneralInfoForm.controls['languages'].controls; let i = index;">
+              <div [formGroupName]="i" >
+                <mat-checkbox [formControlName]="'active'">{{'DRIVER.DETAILS.LANGUAGES.' + language.get('name').value | translate}}</mat-checkbox>
+              </div>          
+            </div>        
+          </section>
+          <!-- LANGUAGES -->
+      </div>
+      
+
       <div class="mt-16">
         <button mat-raised-button *ngIf="pageType === 'new'" (click)="createDriver()"
           [disabled]="driverGeneralInfoForm.invalid || driverGeneralInfoForm.pristine">
