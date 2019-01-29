@@ -76,6 +76,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
   driverStateForm: any;
 
   documentTypes= ['CC', 'PASSPORT'];
+  genders = ['FEMALE', 'MALE'];
 
   constructor(
     private translationLoader: FuseTranslationLoaderService,
@@ -93,7 +94,7 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    const englishState = this.driver.generalInfo.languages.find(language => language.name === 'english');
+    const englishState = this.driver ? this.driver.generalInfo.languages.find(language => language.name === 'english'): false;
     this.driverGeneralInfoForm = new FormGroup({
       documentType: new FormControl(this.driver ? (this.driver.generalInfo || {}).documentType : '', [Validators.required]),
       document: new FormControl(this.driver ? (this.driver.generalInfo || {}).document : '', [Validators.required]),
@@ -101,6 +102,8 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
       lastname: new FormControl(this.driver ? (this.driver.generalInfo || {}).lastname : '', [Validators.required]),
       email: new FormControl(this.driver ? (this.driver.generalInfo || {}).email : '', [Validators.required, Validators.email]),
       phone: new FormControl(this.driver ? (this.driver.generalInfo || {}).phone : '', [Validators.required]),
+      gender: new FormControl(this.driver ? (this.driver.generalInfo || {}).gender : '', [Validators.required]),
+      pmr: new FormControl(this.driver ? (this.driver.generalInfo || {}).pmr : false, [Validators.required]),
       languages: new FormArray([
         new FormGroup({
           name: new FormControl('english'),
@@ -129,12 +132,13 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
       mergeMap(selectedBusiness => {
         return this.showConfirmationDialog$("DRIVER.CREATE_MESSAGE", "DRIVER.CREATE_TITLE")
         .pipe(
-          mergeMap(ok => {
+          mergeMap(() => {
             this.driver = {
               generalInfo: this.driverGeneralInfoForm.getRawValue(),
               state: this.driverStateForm.getRawValue().state,
               businessId: selectedBusiness.id
             };
+            console.log(this.driver);
             return this.DriverDetailservice.createDriverDriver$(this.driver);
           }),
           mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
@@ -163,6 +167,8 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
             lastname: this.driverGeneralInfoForm.getRawValue().lastname,
             email: this.driverGeneralInfoForm.getRawValue().email,
             phone: this.driverGeneralInfoForm.getRawValue().phone,
+            gender: this.driverGeneralInfoForm.getRawValue().gender,
+            pmr: this.driverGeneralInfoForm.getRawValue().pmr,
             languages:  this.driverGeneralInfoForm.getRawValue().languages
           };
           console.log('this.driverGeneralInfoForm.getRawValue() => ', this.driverGeneralInfoForm.getRawValue());

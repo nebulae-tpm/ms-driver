@@ -44,14 +44,14 @@
             <driver-general-info [pageType]="pageType" [driver]="driver" *ngIf="pageType">
             </driver-general-info>
           </mat-tab>
-          <mat-tab label="{{'DRIVER.DETAILS.TABS.MEMBERSHIP' | translate}}">
-              <driver-membership [driver]="driver" *ngIf="pageType && pageType == 'edit'"></driver-membership>
+          <mat-tab *ngIf="pageType && pageType == 'edit'" label="{{'DRIVER.DETAILS.TABS.MEMBERSHIP' | translate}}">
+              <driver-membership [driver]="driver"></driver-membership>
           </mat-tab>
-          <mat-tab label="{{'DRIVER.DETAILS.TABS.CREDENTIALS' | translate}}">
-            <driver-auth [driver]="driver" *ngIf="pageType && pageType == 'edit'"></driver-auth>
+          <mat-tab  *ngIf="pageType && pageType == 'edit'" label="{{'DRIVER.DETAILS.TABS.CREDENTIALS' | translate}}">
+            <driver-auth [driver]="driver"></driver-auth>
           </mat-tab>
-          <mat-tab label="{{'DRIVER.DETAILS.TABS.BLOCKS' | translate}}">
-            <driver-blocks [driver]="driver" *ngIf="pageType && pageType == 'edit'">
+          <mat-tab *ngIf="pageType && pageType == 'edit'" label="{{'DRIVER.DETAILS.TABS.BLOCKS' | translate}}">
+            <driver-blocks [driver]="driver">
             </driver-blocks>
           </mat-tab>
 

@@ -22,7 +22,12 @@ export const locale = {
           MEMBERSHIP: 'Membership',
           CREDENTIALS: 'Credentials'
         },
-        GENERAL_INFO: 'General Info',
+        GENDER: 'Gender',
+        GENDER_MALE: 'Male',
+        GENDER_FEMALE: 'Female',
+        PMR_TITLE: 'PRM',
+        PMR: 'Reduced mobility',
+        GENERAL_INFO: 'General Info',        
         ENABLED: 'Enabled',
         DISABLED: 'Disabled',
         NAME: 'Name',

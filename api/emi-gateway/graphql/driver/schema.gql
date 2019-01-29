@@ -55,6 +55,10 @@ type DriverGeneralInfo {
   phone: BigInt
   "Languages"
   languages: [DriverLanguages]
+  "Gender"
+  gender: String
+  "PMR state"
+  pmr: Boolean
 }
 
 type DriverLanguages {
@@ -109,6 +113,10 @@ input DriverDriverGeneralInfoInput {
   phone: BigInt!
   "Driver languages"
   languages: [DriverLanguagesInput]
+  "Gender"
+  gender: String
+  "PMR state"
+  pmr: Boolean
 }
 
 input DriverLanguagesInput {

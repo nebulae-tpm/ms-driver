@@ -45,6 +45,8 @@ export const DriverDriver = gql`
         lastname
         email
         phone
+        gender
+        pmr
         languages {
           name
           active
@@ -77,6 +79,8 @@ export const DriverDrivers = gql`
         lastname
         email
         phone
+        gender
+        pmr
         languages {
           name
           active
@@ -189,6 +193,8 @@ export const DriverDriverUpdatedSubscription = gql`
         lastname
         email
         phone
+        gender
+        pmr
         languages {
           name
           active

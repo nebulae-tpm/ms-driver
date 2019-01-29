@@ -74,18 +74,42 @@
       </mat-form-field>
       <!-- DRIVER CONTACT PHONE -->
 
-      <div fxFlex="100" fxLayout="column">
-        <br>
-        <div fxFlex.gt-xs="100" fxFlex="100" class="h2">{{'DRIVER.DETAILS.LANGUAGES_TITLE' | translate}}</div>
-          <!-- LANGUAGES -->
+      <!-- DOCUMENT TYPE -->
+      <mat-form-field fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="pr-8 pl-8">
+        <mat-select name="gender" formControlName="gender" placeholder="{{'DRIVER.DETAILS.GENDER' | translate}}">
+          <mat-option *ngFor="let gender of genders" [value]="gender">
+            {{ 'DRIVER.DETAILS.GENDER_'+ gender | translate }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="driverGeneralInfoForm.hasError('required', ['gender'])">
+          {{'DRIVER.DETAILS.GENDER_REQUIRED' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <!-- DOCUMENT TYPE -->
+
+      <div fxFlex="100" fxLayout="row wrap">
+        <!--  PMR STATE -->
+        <div style="margin-bottom: 10px" fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="h2">
+          {{'DRIVER.DETAILS.PMR_TITLE' | translate}}
+          <section fxFlex.gt-xs="50" fxFlex="100" class="example-section">
+            <mat-checkbox name="pmr" formControlName="pmr">{{'DRIVER.DETAILS.PMR' | translate}}</mat-checkbox>
+          </section>
+        </div>
+        <!--  PMR STATE -->
+      
+        <!-- LANGUAGES -->
+        <div fxFlex.gt-xs="50" fxFlex="100" fxLayout="column" class="h2">
+          {{'DRIVER.DETAILS.LANGUAGES_TITLE' | translate}}
           <section class="languages-section">
             <div formArrayName="languages" *ngFor="let language of driverGeneralInfoForm.controls['languages'].controls; let i = index;">
-              <div [formGroupName]="i" >
-                <mat-checkbox [formControlName]="'active'">{{'DRIVER.DETAILS.LANGUAGES.' + language.get('name').value | translate}}</mat-checkbox>
-              </div>          
-            </div>        
+              <div [formGroupName]="i">
+                <mat-checkbox [formControlName]="'active'">{{'DRIVER.DETAILS.LANGUAGES.' + language.get('name').value |
+                  translate}}</mat-checkbox>
+              </div>
+            </div>
           </section>
-          <!-- LANGUAGES -->
+        </div>
+        <!-- LANGUAGES -->
       </div>
       
 

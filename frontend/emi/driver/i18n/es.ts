@@ -22,6 +22,11 @@ export const locale = {
           MEMBERSHIP: 'Membresía',
           CREDENTIALS: 'Credenciales'
         },
+        GENDER: 'Género',
+        GENDER_MALE: 'Masculino',
+        GENDER_FEMALE: 'Femenino',
+        PMR_TITLE: 'PMR',
+        PMR: 'Movilidad reducida',
         GENERAL_INFO: 'Información general',
         ENABLED: 'Activo',
         DISABLED: 'Desactivado',
