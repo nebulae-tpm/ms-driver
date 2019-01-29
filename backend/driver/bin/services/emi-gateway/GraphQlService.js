@@ -118,7 +118,7 @@ class GraphQlService {
    return of(msg).pipe(mergeMap(
     ({ response, correlationId, replyTo }) =>
       replyTo
-        ? broker.send$(replyTo, "emi-gateway.graphql.Query.response", response, {
+        ? broker.send$(replyTo, "emigateway.graphql.Query.response", response, {
             correlationId
           })
         : of(undefined)
@@ -147,51 +147,51 @@ class GraphQlService {
     return [
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.query.DriverDrivers"
+        messageType: "emigateway.graphql.query.DriverDrivers"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.query.DriverDriversSize"
+        messageType: "emigateway.graphql.query.DriverDriversSize"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.query.DriverDriver"
+        messageType: "emigateway.graphql.query.DriverDriver"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverCreateDriver"
+        messageType: "emigateway.graphql.mutation.DriverCreateDriver"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverUpdateDriverGeneralInfo"
+        messageType: "emigateway.graphql.mutation.DriverUpdateDriverGeneralInfo"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverUpdateDriverState"
+        messageType: "emigateway.graphql.mutation.DriverUpdateDriverState"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverCreateDriverAuth"
+        messageType: "emigateway.graphql.mutation.DriverCreateDriverAuth"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverRemoveDriverAuth"
+        messageType: "emigateway.graphql.mutation.DriverRemoveDriverAuth"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverResetDriverPassword"
+        messageType: "emigateway.graphql.mutation.DriverResetDriverPassword"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState"
+        messageType: "emigateway.graphql.mutation.DriverUpdateDriverMembershipState"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.mutation.driverRemoveDriverBlocking"
+        messageType: "emigateway.graphql.mutation.driverRemoveDriverBlocking"
       },
       {
         aggregateType: "Driver",
-        messageType: "emi-gateway.graphql.query.DriverDriverBlocks"
+        messageType: "emigateway.graphql.query.DriverDriverBlocks"
       }
     ];
   }
@@ -202,51 +202,51 @@ class GraphQlService {
    */
   generateFunctionMap() {    
     return {
-      "emi-gateway.graphql.query.DriverDrivers": {
+      "emigateway.graphql.query.DriverDrivers": {
         fn: DriverCQRS.getDriverList$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.query.DriverDriversSize": {
+      "emigateway.graphql.query.DriverDriversSize": {
         fn: DriverCQRS.getDriverListSize$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.query.DriverDriver": {
+      "emigateway.graphql.query.DriverDriver": {
         fn: DriverCQRS.getDriver$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.mutation.DriverCreateDriver": {
+      "emigateway.graphql.mutation.DriverCreateDriver": {
         fn: DriverCQRS.createDriver$,
         obj: DriverCQRS
       }, 
-      "emi-gateway.graphql.mutation.DriverUpdateDriverGeneralInfo": {
+      "emigateway.graphql.mutation.DriverUpdateDriverGeneralInfo": {
         fn: DriverCQRS.updateDriverGeneralInfo$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.mutation.DriverUpdateDriverState": {
+      "emigateway.graphql.mutation.DriverUpdateDriverState": {
         fn: DriverCQRS.updateDriverState$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState": {
+      "emigateway.graphql.mutation.DriverUpdateDriverMembershipState": {
         fn: DriverCQRS.updateDriverMembershipState$,
         obj: DriverCQRS
       },
-      'emi-gateway.graphql.mutation.DriverCreateDriverAuth': {
+      'emigateway.graphql.mutation.DriverCreateDriverAuth': {
         fn: DriverCQRS.createDriverAuth$,
         obj: DriverCQRS
       },
-      'emi-gateway.graphql.mutation.DriverRemoveDriverAuth': {
+      'emigateway.graphql.mutation.DriverRemoveDriverAuth': {
         fn: DriverCQRS.removeDriverAuth$,
         obj: DriverCQRS
       },
-      'emi-gateway.graphql.mutation.DriverResetDriverPassword': {
+      'emigateway.graphql.mutation.DriverResetDriverPassword': {
         fn: DriverCQRS.resetDriverPassword$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.mutation.driverRemoveDriverBlocking": {
+      "emigateway.graphql.mutation.driverRemoveDriverBlocking": {
         fn: DriverCQRS.removeDriverBlock$,
         obj: DriverCQRS
       },
-      "emi-gateway.graphql.query.DriverDriverBlocks": {
+      "emigateway.graphql.query.DriverDriverBlocks": {
         fn: DriverCQRS.getDriverBlocks$,
         obj: DriverCQRS
       }

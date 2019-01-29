@@ -313,9 +313,9 @@ class DriverCQRS {
       ),
       mergeMap(() => eventSourcing.eventStore.emitEvent$(
         new Event({
-          eventType: "UserAuthPasswordUpdated",
+          eventType: "DriverAuthPasswordUpdated",
           eventTypeVersion: 1,
-          aggregateType: "User",
+          aggregateType: "Driver",
           aggregateId: driver._id,
           data: {},
           user: authToken.preferred_username

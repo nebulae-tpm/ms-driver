@@ -34,70 +34,76 @@ module.exports = {
 
     Query: {
         DriverDrivers(root, args, context) {
-            return RoleValidator.checkPermissions$(context.authToken.realm_access.roles, 'ms-'+'Driver', 'DriverDrivers', PERMISSION_DENIED_ERROR_CODE, 'Permission denied', ["PLATFORM-ADMIN"])
-            .pipe(
-                mergeMap(() =>
-                    broker
-                    .forwardAndGetReply$(
-                        "Driver",
-                        "emi-gateway.graphql.query.DriverDrivers",
-                        { root, args, jwt: context.encodedToken },
-                        2000
-                    )
-                ),
-                catchError(err => handleError$(err, "DriverDrivers")),
-                mergeMap(response => getResponseFromBackEnd$(response))
-            ).toPromise();
+            return RoleValidator.checkPermissions$(
+                context.authToken.realm_access.roles,
+                'ms-driver', 'DriverDrivers', PERMISSION_DENIED_ERROR_CODE,
+                'Permission denied', ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
+            )
+                .pipe(
+                    mergeMap(() =>
+                        broker.forwardAndGetReply$(
+                            "Driver",
+                            "emigateway.graphql.query.driverDrivers",
+                            { root, args, jwt: context.encodedToken },
+                            2000
+                        )
+                    ),
+                    catchError(err => handleError$(err, "driverDrivers")),
+                    mergeMap(response => getResponseFromBackEnd$(response))
+                ).toPromise();
         },
         DriverDriversSize(root, args, context) {
-            return RoleValidator.checkPermissions$(context.authToken.realm_access.roles, 'ms-'+'Driver', 'DriverDriversSize', PERMISSION_DENIED_ERROR_CODE, 'Permission denied', ["PLATFORM-ADMIN"])
-            .pipe(
-                mergeMap(() =>
-                    broker
-                    .forwardAndGetReply$(
-                        "Driver",
-                        "emi-gateway.graphql.query.DriverDriversSize",
-                        { root, args, jwt: context.encodedToken },
-                        2000
-                    )
-                ),
-                catchError(err => handleError$(err, "DriverDriversSize")),
-                mergeMap(response => getResponseFromBackEnd$(response))
-            ).toPromise();
+            return RoleValidator.checkPermissions$(
+                context.authToken.realm_access.roles,
+                'ms-driver', 'DriverDriversSize', PERMISSION_DENIED_ERROR_CODE,
+                'Permission denied', ["PLATFORM-ADMIN", "BUSINESS-OWNER"])
+                .pipe(
+                    mergeMap(() =>
+                        broker.forwardAndGetReply$(
+                            "Driver",
+                            "emigateway.graphql.query.driverDriversSize",
+                            { root, args, jwt: context.encodedToken },
+                            2000
+                        )
+                    ),
+                    catchError(err => handleError$(err, "driverDriversSize")),
+                    mergeMap(response => getResponseFromBackEnd$(response))
+                ).toPromise();
         },
         DriverDriver(root, args, context) {
-            return RoleValidator.checkPermissions$(context.authToken.realm_access.roles, 'ms-'+'Driver', 'DriverDriver', PERMISSION_DENIED_ERROR_CODE, 'Permission denied', ["PLATFORM-ADMIN"])
+            return RoleValidator.checkPermissions$(
+                context.authToken.realm_access.roles,
+                'ms-driver', 'DriverDriver', PERMISSION_DENIED_ERROR_CODE,
+                'Permission denied', ["PLATFORM-ADMIN", "BUSINESS-OWNER"])
             .pipe(
                 mergeMap(() =>
-                    broker
-                    .forwardAndGetReply$(
+                    broker.forwardAndGetReply$(
                         "Driver",
-                        "emi-gateway.graphql.query.DriverDriver",
+                        "emigateway.graphql.query.driverDriver",
                         { root, args, jwt: context.encodedToken },
                         2000
                     )
                 ),
-                catchError(err => handleError$(err, "DriverDriver")),
+                catchError(err => handleError$(err, "driverDriver")),
                 mergeMap(response => getResponseFromBackEnd$(response))
             ).toPromise();
         },
         DriverDriverBlocks(root, args, context) {
             return RoleValidator.checkPermissions$(
                 context.authToken.realm_access.roles,
-                'ms-'+'Driver',
-                'DriverDriverBlocks',
+                'ms-driver', 'DriverDriverBlocks',
                 PERMISSION_DENIED_ERROR_CODE,
-                'Permission denied', ["PLATFORM-ADMIN"]
+                'Permission denied', ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             )
             .pipe(
                 mergeMap(() => broker
                     .forwardAndGetReply$(
                         "Driver",
-                        "emi-gateway.graphql.query.DriverDriverBlocks",
+                        "emigateway.graphql.query.driverDriverBlocks",
                         { root, args, jwt: context.encodedToken },
                         2000
                     )),
-                catchError(err => handleError$(err, "DriverDriverBlocks")),
+                catchError(err => handleError$(err, "driverDriverBlocks")),
                 mergeMap(response => getResponseFromBackEnd$(response))
             ).toPromise();
         },
@@ -108,38 +114,35 @@ module.exports = {
         DriverCreateDriver(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverCreateDriver",
+              "Driver", "DriverCreateDriver",
               PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
-              ["PLATFORM-ADMIN"]
+              "Permission denied", ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             )
             .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverCreateDriver",
+                    "emigateway.graphql.mutation.driverCreateDriver",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
                 ),
-                catchError(err => handleError$(err, "DriverCreateDriver")),
+                catchError(err => handleError$(err, "driverCreateDriver")),
                 mergeMap(response => getResponseFromBackEnd$(response))
             ).toPromise();
         },
         DriverUpdateDriverGeneralInfo(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverUpdateDriverGeneralInfo",
+              "Driver", "DriverUpdateDriverGeneralInfo",
               PERMISSION_DENIED_ERROR_CODE,
               "Permission denied",
-              ["PLATFORM-ADMIN"]
+              ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             ).pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverUpdateDriverGeneralInfo",
+                    "emigateway.graphql.mutation.driverUpdateDriverGeneralInfo",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
@@ -151,16 +154,14 @@ module.exports = {
         DriverUpdateDriverState(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverUpdateDriverState",
+              "Driver", "DriverUpdateDriverState",
               PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
-              ["PLATFORM-ADMIN"]
+              "Permission denied", ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             ).pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverUpdateDriverState",
+                    "emigateway.graphql.mutation.driverUpdateDriverState",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
@@ -172,16 +173,14 @@ module.exports = {
         DriverUpdateDriverMembershipState(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverUpdateDriverMembershipState",
-              PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
+              "Driver", "DriverUpdateDriverMembershipState",
+              PERMISSION_DENIED_ERROR_CODE, "Permission denied",
               ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             ).pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverUpdateDriverMembershipState",
+                    "emigateway.graphql.mutation.driverUpdateDriverMembershipState",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
@@ -193,22 +192,20 @@ module.exports = {
         DriverCreateDriverAuth(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverCreateDriverAuth",
-              PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
+              "Driver", "DriverCreateDriverAuth",
+              PERMISSION_DENIED_ERROR_CODE, "Permission denied",
               ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             )
               .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverCreateDriverAuth",
+                    "emigateway.graphql.mutation.driverCreateDriverAuth",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
                 ),
-                catchError(err => handleError$(err, "DriverCreateDriverAuth")),
+                catchError(err => handleError$(err, "driverCreateDriverAuth")),
                 mergeMap(response => getResponseFromBackEnd$(response))
               )
               .toPromise();
@@ -216,8 +213,7 @@ module.exports = {
         DriverResetDriverPassword(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverResetDriverPassword",
+              "Driver", "DriverResetDriverPassword",
               PERMISSION_DENIED_ERROR_CODE,
               "Permission denied",
               ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
@@ -226,12 +222,12 @@ module.exports = {
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverResetDriverPassword",
+                    "emigateway.graphql.mutation.driverResetDriverPassword",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
                 ),
-                catchError(err => handleError$(err, " DriverResetDriverPassword")),
+                catchError(err => handleError$(err, "driverResetDriverPassword")),
                 mergeMap(response => getResponseFromBackEnd$(response))
               )
               .toPromise();
@@ -239,22 +235,20 @@ module.exports = {
         DriverRemoveDriverAuth(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverRemoveDriverAuth",
-              PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
+              "Driver", "DriverRemoveDriverAuth",
+              PERMISSION_DENIED_ERROR_CODE, "Permission denied",
               ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             )
               .pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.DriverRemoveDriverAuth",
+                    "emigateway.graphql.mutation.driverRemoveDriverAuth",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )
                 ),
-                catchError(err => handleError$(err, "DriverRemoveDriverAuth")),
+                catchError(err => handleError$(err, "driverRemoveDriverAuth")),
                 mergeMap(response => getResponseFromBackEnd$(response))
               )
               .toPromise();
@@ -262,16 +256,14 @@ module.exports = {
         DriverRemoveDriverBlocking(root, args, context) {
             return RoleValidator.checkPermissions$(
               context.authToken.realm_access.roles,
-              "Driver",
-              "DriverRemoveDriverBlocking",
-              PERMISSION_DENIED_ERROR_CODE,
-              "Permission denied",
+              "Driver", "DriverRemoveDriverBlocking",
+              PERMISSION_DENIED_ERROR_CODE, "Permission denied",
               ["PLATFORM-ADMIN", "BUSINESS-OWNER"]
             ).pipe(
                 mergeMap(() =>
                   context.broker.forwardAndGetReply$(
                     "Driver",
-                    "emi-gateway.graphql.mutation.driverRemoveDriverBlocking",
+                    "emigateway.graphql.mutation.driverRemoveDriverBlocking",
                     { root, args, jwt: context.encodedToken },
                     2000
                   )

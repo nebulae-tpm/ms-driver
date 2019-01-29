@@ -145,10 +145,6 @@ class EventStoreService {
         fn: DriverES.handleDriverAuthDeleted$,
         obj: DriverES 
       },
-      DriverAuthDeleted: {
-        fn: DriverES.handleDriverAuthDeleted$,
-        obj: DriverES 
-      },
       DriverBlockRemoved: {
         fn: DriverES.handleDriverBlockRemoved$,
         obj: DriverES

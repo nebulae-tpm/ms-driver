@@ -138,7 +138,6 @@ export class DriverDetailGeneralInfoComponent implements OnInit, OnDestroy {
               state: this.driverStateForm.getRawValue().state,
               businessId: selectedBusiness.id
             };
-            console.log(this.driver);
             return this.DriverDetailservice.createDriverDriver$(this.driver);
           }),
           mergeMap(resp => this.graphQlAlarmsErrorHandler$(resp)),
