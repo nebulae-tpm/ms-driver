@@ -4,15 +4,15 @@
         "src": "frontend/emi/driver",
         "groups": [
             {
-              "id": "BUSINESS_UNIT_MANAGER",
-              "icon": "location_searching",
-              "translate": {
+            "id": "BUSINESS_UNIT_MANAGER",
+            "icon": "location_searching",
+            "translate": {
                 "en": "Business units",
                 "es": "Unidades de negocio"
-              },
-              "priority": 200
+            },
+            "priority": 200
             }
-        ],
+          ],
         "subgroups": [
             {
                 "groupId": "BUSINESS_UNIT_MANAGER",
@@ -27,8 +27,9 @@
         ],
         "contents": [
             {
-                "groupId": "GROUP_NAME",
                 "id": "driver-management",
+                "groupId": "BUSINESS_UNIT_MANAGER",
+                "subgroupId": "management",
                 "icon": "airline_seat_recline_normal",
                 "translate": {
                     "en": "Driver",
