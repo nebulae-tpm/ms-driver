@@ -147,43 +147,43 @@ class GraphQlService {
     return [
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.query.DriverDrivers"
+        messageType: "emigateway.graphql.query.driverDrivers"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.query.DriverDriversSize"
+        messageType: "emigateway.graphql.query.driverDriversSize"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.query.DriverDriver"
+        messageType: "emigateway.graphql.query.driverDriver"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverCreateDriver"
+        messageType: "emigateway.graphql.mutation.driverCreateDriver"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverUpdateDriverGeneralInfo"
+        messageType: "emigateway.graphql.mutation.driverUpdateDriverGeneralInfo"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverUpdateDriverState"
+        messageType: "emigateway.graphql.mutation.driverUpdateDriverState"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverCreateDriverAuth"
+        messageType: "emigateway.graphql.mutation.driverCreateDriverAuth"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverRemoveDriverAuth"
+        messageType: "emigateway.graphql.mutation.driverRemoveDriverAuth"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverResetDriverPassword"
+        messageType: "emigateway.graphql.mutation.driverResetDriverPassword"
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.mutation.DriverUpdateDriverMembershipState"
+        messageType: "emigateway.graphql.mutation.driverUpdateDriverMembershipState"
       },
       {
         aggregateType: "Driver",
@@ -191,7 +191,7 @@ class GraphQlService {
       },
       {
         aggregateType: "Driver",
-        messageType: "emigateway.graphql.query.DriverDriverBlocks"
+        messageType: "emigateway.graphql.query.driverDriverBlocks"
       }
     ];
   }
@@ -202,43 +202,43 @@ class GraphQlService {
    */
   generateFunctionMap() {    
     return {
-      "emigateway.graphql.query.DriverDrivers": {
+      "emigateway.graphql.query.driverDrivers": {
         fn: DriverCQRS.getDriverList$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.query.DriverDriversSize": {
+      "emigateway.graphql.query.driverDriversSize": {
         fn: DriverCQRS.getDriverListSize$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.query.DriverDriver": {
+      "emigateway.graphql.query.driverDriver": {
         fn: DriverCQRS.getDriver$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.mutation.DriverCreateDriver": {
+      "emigateway.graphql.mutation.driverCreateDriver": {
         fn: DriverCQRS.createDriver$,
         obj: DriverCQRS
       }, 
-      "emigateway.graphql.mutation.DriverUpdateDriverGeneralInfo": {
+      "emigateway.graphql.mutation.driverUpdateDriverGeneralInfo": {
         fn: DriverCQRS.updateDriverGeneralInfo$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.mutation.DriverUpdateDriverState": {
+      "emigateway.graphql.mutation.driverUpdateDriverState": {
         fn: DriverCQRS.updateDriverState$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.mutation.DriverUpdateDriverMembershipState": {
+      "emigateway.graphql.mutation.driverUpdateDriverMembershipState": {
         fn: DriverCQRS.updateDriverMembershipState$,
         obj: DriverCQRS
       },
-      'emigateway.graphql.mutation.DriverCreateDriverAuth': {
+      'emigateway.graphql.mutation.driverCreateDriverAuth': {
         fn: DriverCQRS.createDriverAuth$,
         obj: DriverCQRS
       },
-      'emigateway.graphql.mutation.DriverRemoveDriverAuth': {
+      'emigateway.graphql.mutation.driverRemoveDriverAuth': {
         fn: DriverCQRS.removeDriverAuth$,
         obj: DriverCQRS
       },
-      'emigateway.graphql.mutation.DriverResetDriverPassword': {
+      'emigateway.graphql.mutation.driverResetDriverPassword': {
         fn: DriverCQRS.resetDriverPassword$,
         obj: DriverCQRS
       },
@@ -246,7 +246,7 @@ class GraphQlService {
         fn: DriverCQRS.removeDriverBlock$,
         obj: DriverCQRS
       },
-      "emigateway.graphql.query.DriverDriverBlocks": {
+      "emigateway.graphql.query.driverDriverBlocks": {
         fn: DriverCQRS.getDriverBlocks$,
         obj: DriverCQRS
       }
