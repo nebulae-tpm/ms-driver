@@ -31,7 +31,6 @@ function getResponseFromBackEnd$(response) {
 module.exports = {
 
     //// QUERY ///////
-
     Query: {
         DriverDrivers(root, args, context) {
             return RoleValidator.checkPermissions$(
